@@ -17,4 +17,8 @@
     <ProjectReference Include="..\CafePointOfSale.Core\CafePointOfSale.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Workflows\" />
+  </ItemGroup>
+
 </Project>
