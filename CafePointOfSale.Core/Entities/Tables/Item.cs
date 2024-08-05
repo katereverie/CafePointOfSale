@@ -8,6 +8,6 @@
         public string ItemDescription { get; set; }
 
         public Category Category { get; set; }
-        public List<ItemPrice> Prices { get; set; }
+        public List<ItemPrice> ItemPrices { get; set; }
     }
 }

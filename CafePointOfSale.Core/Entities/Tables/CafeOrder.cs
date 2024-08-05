@@ -1,7 +1,10 @@
-﻿namespace CafePointOfSale.Core.Entities.Tables
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CafePointOfSale.Core.Entities.Tables
 {
     public class CafeOrder
     {
+        [Key]
         public int OrderID { get; set; }
         public int ServerID { get; set; }
         public int PaymentTypeID { get; set; }
