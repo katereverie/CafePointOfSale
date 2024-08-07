@@ -67,6 +67,50 @@ namespace CafePointOfSale.UI.Utilities
             } while (true);
         }
 
+        public static int GetItemID(List<Item> itemList, string prompt)
+        {
+            do
+            {
+                int itemID = GetPositiveInteger(prompt);
+                if (itemList.Any(i => i.ItemID == itemID))
+                {
+                    return itemID;
+                }
+
+                Console.WriteLine("Invalid Order ID");
+                AnyKey();
+            } while (true);
+        }
+
+        public static byte GetQuantity(string prompt)
+        {
+            byte quantity;
+
+            do
+            {
+                Console.Write(prompt);
+                if (byte.TryParse(Console.ReadLine(), out quantity))
+                {
+                    if (quantity >= 0 && quantity < 100)
+                    {
+                        return quantity;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Quantity too big.");
+                    }
+                }
+
+                Console.WriteLine("Invalid Quantity input.");
+                AnyKey();
+            } while (true);
+        }
+
+        public static int GetCategoryID(List<Category> availableCategories, string prompt)
+        {
+            throw new NotImplementedException();
+        }
+
         public static void PrintActiveServers(List<Server> serverList)
         {
             throw new NotImplementedException();
@@ -82,7 +126,17 @@ namespace CafePointOfSale.UI.Utilities
             throw new NotImplementedException();
         }
 
-        public static int GetCategoryID(List<Category> availableCategories, string v)
+        public static void PrintAvailableItems(List<Item> itemList)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void PrintOrderSummary(List<OrderItem> totalItems)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static bool HasMoreItemsToAdd()
         {
             throw new NotImplementedException();
         }

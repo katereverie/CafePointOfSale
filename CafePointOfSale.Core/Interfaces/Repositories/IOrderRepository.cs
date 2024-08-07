@@ -6,7 +6,7 @@ namespace CafePointOfSale.Core.Interfaces.Repositories
     {
         int Add(CafeOrder order); // return an new orderID
         void Update(CafeOrder order); // could be Payment, could be adding more items
-        void Delete(CafeOrder order); // delete CafeOrder && a list of its OrderItems
+        void Delete(int orderID); // delete CafeOrder && a list of its OrderItems
         CafeOrder? GetByOrderID(int orderID);
         CafeOrder GetOrderDetails(int orderID); // include a list of its OrderItems
         List<CafeOrder> GetOpenOrders(); // paymentTypeID null

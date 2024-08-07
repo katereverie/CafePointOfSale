@@ -12,7 +12,8 @@ namespace CafePointOfSale.Core.Interfaces.Services
         Result<List<Server>> GetActiveServers();
         Result<List<PaymentType>> GetPaymentTypes();
         Result<List<Category>> GetAvailableCategories();
-        Result<List<Item>> GetAvailableItems(int categoryID, int timeOfDayID);
+        Result<List<Item>> GetAvailableItems(int categoryID);
         Result<List<CafeOrder>> GetOpenOrders();
+        List<OrderItem> GetOrderSummary(List<OrderItem> itemList);
     }
 }

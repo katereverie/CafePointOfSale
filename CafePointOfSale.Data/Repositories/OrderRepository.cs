@@ -20,10 +20,15 @@ namespace CafePointOfSale.Data.Repositories
             return order.OrderID;
         }
 
-        public void Delete(CafeOrder order)
+        public void Delete(int orderID)
         {
-            _dbContext.CafeOrders.Remove(order);
-            _dbContext.SaveChanges();
+            var order = _dbContext.CafeOrders.FirstOrDefault(o => o.OrderID == orderID);
+
+            if (order != null)
+            {
+                _dbContext.CafeOrders.Remove(order);
+                _dbContext.SaveChanges();
+            }
         }
 
         public void Update(CafeOrder order)

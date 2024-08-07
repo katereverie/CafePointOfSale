@@ -22,7 +22,8 @@ namespace CafePointOfSale.Application
                 case DatabaseMode.ORM:
                     return new OrderService(
                         new OrderRepository(_config.GetConnectionString()),
-                        new ItemRepository(_config.GetConnectionString()));
+                        new ItemRepository(_config.GetConnectionString()),
+                        new TimeOfDayRepository(_config.GetConnectionString()));
                 case DatabaseMode.Mock:
                 default:
                     throw new NotImplementedException();

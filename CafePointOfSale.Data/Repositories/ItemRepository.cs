@@ -23,7 +23,9 @@ namespace CafePointOfSale.Data.Repositories
             return _dbContext.Items
                 .Include(i => i.Category)
                 .Include(i => i.ItemPrices)
-                .Where(i => i.CategoryID == categoryID && i.ItemPrices.Any(ip => ip.TimeOfDayID == timeOfDayID))
+                .Where(i => i.CategoryID == categoryID // item with matching category
+                    && i.ItemPrices.Any(ip => ip.EndDate == null) // active item
+                    && i.ItemPrices.Any(ip => ip.TimeOfDayID == timeOfDayID)) // item with price that matches time of the day
                 .ToList();
         }
     }

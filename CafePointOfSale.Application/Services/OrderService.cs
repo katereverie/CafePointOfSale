@@ -9,11 +9,13 @@ namespace CafePointOfSale.Application.Services
     {
         private IOrderRepository _orderRepo;
         private IItemRepository _itemRepo;
+        private ITimeOfDayRepository _timeOfDayRepo;
 
-        public OrderService(IOrderRepository orderRepo, IItemRepository itemRepo)
+        public OrderService(IOrderRepository orderRepo, IItemRepository itemRepo, ITimeOfDayRepository timeOfDayRepo)
         {
             _orderRepo = orderRepo;
             _itemRepo = itemRepo;
+            _timeOfDayRepo = timeOfDayRepo;
         }
 
         public Result AddPaymentMethod(int paymentOptionID)
@@ -28,12 +30,30 @@ namespace CafePointOfSale.Application.Services
 
         public Result CancelOrder(int orderID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _orderRepo.Delete(orderID);
+
+                return ResultFactory.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultFactory.Fail(ex.Message);
+            }
         }
 
         public Result<int> CreateOrder(CafeOrder order)
         {
-            throw new NotImplementedException();
+            try
+            {
+                int orderID = _orderRepo.Add(order);
+
+                return ResultFactory.Success(orderID);
+            }
+            catch (Exception ex)
+            {
+                return ResultFactory.Fail<int>(ex.Message);
+            }
         }
 
         public Result<List<Server>> GetActiveServers()
@@ -64,13 +84,21 @@ namespace CafePointOfSale.Application.Services
             }
         }
 
-        public Result<List<Item>> GetAvailableItems(int categoryID, int timeOfDayID)
+        public Result<List<Item>> GetAvailableItems(int categoryID)
         {
             try
             {
-                var itemList = _itemRepo.GetAvailableItems(categoryID, timeOfDayID);
+                int timeOfDayID = _timeOfDayRepo.GetTimeOfDayID();
 
-                return ResultFactory.Success(itemList);
+                if (timeOfDayID == -1)
+                {
+                    return ResultFactory.Fail<List<Item>>("At the current time of day, there is no available item.");
+                }
+                else
+                {
+                    var itemList = _itemRepo.GetAvailableItems(categoryID, timeOfDayID);
+                    return ResultFactory.Success(itemList);
+                }
             }
             catch (Exception ex)
             {
@@ -92,9 +120,29 @@ namespace CafePointOfSale.Application.Services
             }
         }
 
+        public List<OrderItem> GetOrderSummary(List<OrderItem> itemList)
+        {
+            int totalQuantity = 0;
+
+            foreach (var item in itemList)
+            {
+
+                totalQuantity += item.Quantity;
+            }
+        }
+
         public Result<List<PaymentType>> GetPaymentTypes()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var paymentTypeList = _orderRepo.GetAllPaymentTypes();
+
+                return ResultFactory.Success(paymentTypeList);
+            }
+            catch (Exception ex)
+            {
+                return ResultFactory.Fail<List<PaymentType>>(ex.Message);
+            }
         }
     }
 }

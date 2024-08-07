@@ -29,7 +29,7 @@ namespace CafePointOfSale.UI.Workflows
             IO.PrintActiveServers(activeServers);
 
             int serverID = IO.GetServerID(activeServers, "Enter the ID of an available server: ");
-            CafeOrder newOrder = new CafeOrder { ServerID = serverID };
+            CafeOrder newOrder = new CafeOrder { ServerID = serverID, OrderDate = DateTime.Now };
             var coResult = service.CreateOrder(newOrder);
 
             if (coResult.Ok)
@@ -54,6 +54,7 @@ namespace CafePointOfSale.UI.Workflows
              *    a. Display available categories
              *    b. User may choose to exit (enter 0) loop
              *    c. Get categoryID from user via IO
+             *    d. Get timeOfDayID from TimeOfDayRepo
              *    d. Display available items based on chosen categoryID
              *    e. Get itemID and quantity from user via IO
              *    f. Initiate OrderItem based on e
@@ -83,7 +84,7 @@ namespace CafePointOfSale.UI.Workflows
             IO.PrintOpenOrders(openOrders);
             int orderID = IO.GetOrderID(openOrders, "Enter the ID of an open order: ");
 
-            List<OrderItem> items = new List<OrderItem>();
+            List<OrderItem> totalItems = new List<OrderItem>();
             bool hasMoreItemsToAdd = true;
 
             while (hasMoreItemsToAdd)
@@ -101,14 +102,39 @@ namespace CafePointOfSale.UI.Workflows
                 }
                 
                 var availableCategories = gvaResult.Data;
-                IO.PrintAvailableCategories(availableCategories);
-                int categoryID = IO.GetCategoryID(availableCategories, "Enter the ID of an available category: ");
-                service.GetAvailableItems(categoryID)
+
+                do
+                {
+                    IO.PrintAvailableCategories(availableCategories);
+                    int categoryID = IO.GetCategoryID(availableCategories, "Enter the ID of an available category: ");
+                    var gaiResult = service.GetAvailableItems(categoryID);
+                    if (!gaiResult.Ok)
+                    {
+                        Console.WriteLine(gaiResult.Message);
+                        break;
+                    }
+
+                    int itemID = IO.GetItemID(gaiResult.Data, "Enter the ID of an available item: ");
+                    byte quantity = IO.GetQuantity("Enter Quantity: ");
+                    if (quantity == 0)
+                    {
+                        continue;
+                    }
+
+                    OrderItem newOrderItem = new OrderItem
+                    {
+                        OrderID = orderID,
+                        Quantity = quantity
+                    };
+
+                    totalItems.Add(newOrderItem);
+                    service.GetOrderSummary(totalItems);
+                    IO.PrintOrderSummary(totalItems);
+
+                    hasMoreItemsToAdd = IO.HasMoreItemsToAdd();
+                    
+                } while (true);
             }
-
-
-            
-
         }
 
         public static void ViewOpenOrders(IOrderService service)
