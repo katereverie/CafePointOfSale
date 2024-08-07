@@ -27,8 +27,8 @@ namespace CafePointOfSale.UI
             {
                 case "ORM":
                     return DatabaseMode.ORM;
-                case "Training":
-                    return DatabaseMode.Training;
+                case "Mock":
+                    return DatabaseMode.Mock;
                 default:
                     throw new Exception("DabaseMode configuration key is missing.");
             }

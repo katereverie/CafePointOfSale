@@ -1,8 +1,8 @@
 ﻿namespace CafePointOfSale.Core.Entities.Enums
 {
-    public enum DatabaseMode
+    public enum TimeOfDay
     {
-        ORM,
+        RealTime,
         Mock
     }
 }

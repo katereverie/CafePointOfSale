@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
+    <None Remove="2mjw1avj.5dx~" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CafePointOfSale.Core\CafePointOfSale.Core.csproj" />
+    <ProjectReference Include="..\CafePointOfSale.Data\CafePointOfSale.Data.csproj" />
   </ItemGroup>
 
 </Project>

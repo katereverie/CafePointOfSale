@@ -1,48 +1,67 @@
 ﻿using CafePointOfSale.Core.Entities.Tables;
 using CafePointOfSale.Core.Interfaces.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace CafePointOfSale.Data.Repositories
 {
     public class OrderRepository : IOrderRepository
     {
-        public void AddPaymentMethod(int paymentOptionID)
+        private CafeContext _dbContext;
+
+        public OrderRepository(string connectionString)
         {
-            throw new NotImplementedException();
+            _dbContext = new CafeContext(connectionString);
         }
 
-        public void AddToOrder(List<OrderItem> items)
+        public int Add(CafeOrder order)
         {
-            throw new NotImplementedException();
+            _dbContext.CafeOrders.Add(order);
+            _dbContext.SaveChanges();
+            return order.OrderID;
         }
 
-        public void CancelOrder(int orderID)
+        public void Delete(CafeOrder order)
         {
-            throw new NotImplementedException();
+            _dbContext.CafeOrders.Remove(order);
+            _dbContext.SaveChanges();
         }
 
-        public int CreateOrder(int serverID)
+        public void Update(CafeOrder order)
         {
-            throw new NotImplementedException();
+            _dbContext.CafeOrders.Update(order);
+            _dbContext.SaveChanges();
         }
 
         public List<Server> GetActiveServers()
         {
-            throw new NotImplementedException();
+            return _dbContext.Servers.ToList();
+        }
+
+        public List<PaymentType> GetAllPaymentTypes()
+        {
+            return _dbContext.PaymentTypes.ToList();
         }
 
         public List<CafeOrder> GetOpenOrders()
         {
-            throw new NotImplementedException();
+            return _dbContext.CafeOrders
+                .Where(o => o.PaymentTypeID == null)
+                .ToList(); 
         }
 
         public CafeOrder GetOrderDetails(int orderID)
         {
-            throw new NotImplementedException();
+            return _dbContext.CafeOrders
+                .Include(o => o.OrderItems)
+                .Where(o => o.OrderID == orderID)
+                .First();
         }
 
-        public List<PaymentType> GetPaymentTypes()
+        public CafeOrder? GetByOrderID(int orderID)
         {
-            throw new NotImplementedException();
+            return _dbContext.CafeOrders
+                .Where(o => o.OrderID == orderID)
+                .FirstOrDefault();
         }
     }
 }
