@@ -1,4 +1,5 @@
-﻿using CafePointOfSale.Core.Entities.Tables;
+﻿using CafePointOfSale.Core.Entities.DTOs;
+using CafePointOfSale.Core.Entities.Tables;
 using CafePointOfSale.Core.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,18 +16,35 @@ namespace CafePointOfSale.Data.Repositories
 
         public List<Category> GetAvailableCategories()
         {
-            return _dbContext.Categories.ToList();
+            return _dbContext.Category.ToList();
         }
 
-        public List<Item> GetAvailableItems(int categoryID, int timeOfDayID)
+        public List<AvailableItem> GetAvailableItems(int categoryID, int timeOfDayID)
         {
-            return _dbContext.Items
+            var items = _dbContext.Item
                 .Include(i => i.Category)
                 .Include(i => i.ItemPrices)
-                .Where(i => i.CategoryID == categoryID // item with matching category
-                    && i.ItemPrices.Any(ip => ip.EndDate == null) // active item
-                    && i.ItemPrices.Any(ip => ip.TimeOfDayID == timeOfDayID)) // item with price that matches time of the day
+                .Where(i => i.CategoryID == categoryID)
                 .ToList();
+
+            var availableItems = new List<AvailableItem>();
+
+            foreach (var item in items)
+            {
+                var currentItemPrice = item.ItemPrices.FirstOrDefault(ip => ip.TimeOfDayID == timeOfDayID && (ip.EndDate == null || ip.EndDate > DateTime.Now));
+                if (currentItemPrice != null)
+                {
+                    availableItems.Add(new AvailableItem
+                    {
+                        ItemID = item.ItemID,
+                        ItemName = item.ItemName,
+                        ItemDescription = item.ItemDescription,
+                        ItemPrice = currentItemPrice
+                    });
+                }
+            }
+
+            return availableItems;
         }
     }
 }
