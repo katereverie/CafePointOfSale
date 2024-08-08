@@ -2,9 +2,10 @@
 {
     public class OrderSummary
     {
-        public int ItemID { get; set; }
+        public int OrderID { get; set; }
         public byte Quantity { get; set; }
-        public decimal Price { get; set; }
-        public decimal ExtendedPrice { get; set; }
+        public decimal Subtotal { get; set; }
+        public decimal Tax { get; set; }
+        public List<AvailableItem> AddedItems { get; set; }
     }
 }
