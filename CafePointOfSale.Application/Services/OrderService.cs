@@ -23,9 +23,35 @@ namespace CafePointOfSale.Application.Services
             throw new NotImplementedException();
         }
 
-        public Result AddToOrder(List<OrderItem> items)
+        public Result ProcessOrder(CafeOrder order)
         {
-            throw new NotImplementedException();
+            try
+            {
+                int itemCount = 0;
+
+                foreach (var item in order.OrderItems)
+                {
+                    itemCount += item.Quantity;
+                }
+
+                order.Tip = order.Tip ?? 0;
+                order.AmountDue = order.AmountDue ?? 0;
+
+                if (itemCount > 15)
+                {
+                    order.Tip = order.SubTotal * 0.15m;
+                }
+
+                order.AmountDue = order.SubTotal + order.Tax + order.Tip;
+                
+                _orderRepo.Update(order);
+
+                return ResultFactory.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultFactory.Fail(ex.Message);
+            }
         }
 
         public Result CancelOrder(int orderID)
@@ -84,7 +110,7 @@ namespace CafePointOfSale.Application.Services
             }
         }
 
-        public Result<List<Item>> GetAvailableItems(int categoryID)
+        public Result<List<AvailableItem>> GetAvailableItems(int categoryID)
         {
             try
             {
@@ -92,7 +118,7 @@ namespace CafePointOfSale.Application.Services
 
                 if (timeOfDayID == -1)
                 {
-                    return ResultFactory.Fail<List<Item>>("At the current time of day, there is no available item.");
+                    return ResultFactory.Fail<List<AvailableItem>>("At the current time of day, there is no available item.");
                 }
                 else
                 {
@@ -102,7 +128,7 @@ namespace CafePointOfSale.Application.Services
             }
             catch (Exception ex)
             {
-                return ResultFactory.Fail<List<Item>>(ex.Message);
+                return ResultFactory.Fail<List<AvailableItem>>(ex.Message);
             }
         }
 
@@ -120,17 +146,6 @@ namespace CafePointOfSale.Application.Services
             }
         }
 
-        public List<OrderItem> GetOrderSummary(List<OrderItem> itemList)
-        {
-            int totalQuantity = 0;
-
-            foreach (var item in itemList)
-            {
-
-                totalQuantity += item.Quantity;
-            }
-        }
-
         public Result<List<PaymentType>> GetPaymentTypes()
         {
             try
@@ -143,6 +158,21 @@ namespace CafePointOfSale.Application.Services
             {
                 return ResultFactory.Fail<List<PaymentType>>(ex.Message);
             }
+        }
+
+        public CafeOrder CalculateSubtotalAndTax(CafeOrder order)
+        {
+            order.SubTotal = order.SubTotal ?? 0;
+            order.Tax = order.Tax ?? 0;
+
+            foreach (var item in order.OrderItems)
+            {
+                order.SubTotal += item.ExtendedPrice;
+            }
+
+            order.Tax = order.SubTotal * 0.08m;
+
+            return order;
         }
     }
 }
