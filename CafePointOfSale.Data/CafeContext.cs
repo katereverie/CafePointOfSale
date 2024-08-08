@@ -7,14 +7,14 @@ namespace CafePointOfSale.Data
     {
         private string _connectionString;
 
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Item> Items { get; set; }
-        public DbSet<ItemPrice> ItemPrices { get; set; }
-        public DbSet<TimeOfDay> TimeOfDays { get; set; }
-        public DbSet<OrderItem> OrderItems { get; set; }
-        public DbSet<CafeOrder> CafeOrders { get; set; }
-        public DbSet<PaymentType> PaymentTypes { get; set; }    
-        public DbSet<Server> Servers { get; set; }
+        public DbSet<Category> Category { get; set; }
+        public DbSet<Item> Item { get; set; }
+        public DbSet<ItemPrice> ItemPrice { get; set; }
+        public DbSet<TimeOfDay> TimeOfDay { get; set; }
+        public DbSet<OrderItem> OrderItem { get; set; }
+        public DbSet<CafeOrder> CafeOrder { get; set; }
+        public DbSet<PaymentType> PaymentType { get; set; }    
+        public DbSet<Server> Server { get; set; }
 
         public CafeContext(string connectionString)
         {
@@ -23,6 +23,7 @@ namespace CafePointOfSale.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            base.OnConfiguring(optionsBuilder);
             optionsBuilder.UseSqlServer(_connectionString);
         }
     }
