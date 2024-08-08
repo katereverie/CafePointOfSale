@@ -13,8 +13,8 @@ namespace CafePointOfSale.Data.Repositories
             _dbContext = new CafeContext(connectionString);
             TimeRanges = new List<(int TimeOfDayID, TimeSpan StartTime, TimeSpan EndTime)>
             {
-                (1, new TimeSpan(6, 30, 0), new TimeSpan(10, 30, 00)),  // Breakfast: 6:30 to 10:30 
-                (2, new TimeSpan(11, 30, 0), new TimeSpan(15, 0, 0)), // Lunch: 11:30 to 15:00
+                (1, new TimeSpan(6, 30, 0), new TimeSpan(11, 30, 00)),  // Breakfast: 6:30 to 10:30 
+                (2, new TimeSpan(11, 30, 0), new TimeSpan(16, 0, 0)), // Lunch: 11:30 to 15:00
                 (3, new TimeSpan(16, 0, 0), new TimeSpan(18, 30, 0)), // Happy Hour: 16:00 - 19:00
                 (4, new TimeSpan(18, 30, 0), new TimeSpan(22, 30, 00)) // Dinner: 18:00 - 22:30
             };
