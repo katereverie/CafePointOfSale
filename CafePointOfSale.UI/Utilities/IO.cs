@@ -1,4 +1,5 @@
-﻿using CafePointOfSale.Core.Entities.Tables;
+﻿using CafePointOfSale.Core.Entities.DTOs;
+using CafePointOfSale.Core.Entities.Tables;
 
 namespace CafePointOfSale.UI.Utilities
 {
@@ -6,17 +7,17 @@ namespace CafePointOfSale.UI.Utilities
     {
         public static void AnyKey()
         {
-            Console.WriteLine("Press any key to continue...");
+            Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();
         }
 
-        public static void PrintHeader(string header)
+        public static void PrintHeader(string header, byte totalSpace)
         {
-            string headerSpace = new string(' ', (100 - header.Length) / 2);
+            string headerSpace = new string(' ', (totalSpace - header.Length) / 2);
             Console.WriteLine("\n" + headerSpace + header + headerSpace + "\n");
         }
 
-        public static int GetPositiveInteger(string prompt)
+        public static int GetInteger(string prompt, int min = 0)
         {
             int result;
 
@@ -25,23 +26,25 @@ namespace CafePointOfSale.UI.Utilities
                 Console.Write(prompt);
                 if (int.TryParse(Console.ReadLine(), out result))
                 {
-                    if (result > 0)
+                    if (result >= min)
                     {
                         return result;
                     }
+
+                    Console.WriteLine($"Invalid: Input must be greater than or equal to {min}");
                 }
 
-                Console.WriteLine("Invalid input, must be a positive integer!");
+                Console.WriteLine("Invalid: Not an integer");
                 AnyKey();
             } while (true);
         }
 
-        public static int GetServerID (List<Server> serverList, string prompt)
+        public static int GetServerID (List<Server> servers, string prompt)
         {
             do
             {
-                int serverID = GetPositiveInteger(prompt);
-                if (serverList.Any(s => s.ServerID == serverID))
+                int serverID = GetInteger(prompt);
+                if (servers.Any(s => s.ServerID == serverID))
                 {
                     return serverID;
                 }
@@ -56,7 +59,7 @@ namespace CafePointOfSale.UI.Utilities
         {
             do
             {
-                int orderID = GetPositiveInteger(prompt);
+                int orderID = GetInteger(prompt);
                 if (orderList.Any(o => o.OrderID == orderID))
                 {
                     return orderID;
@@ -67,12 +70,12 @@ namespace CafePointOfSale.UI.Utilities
             } while (true);
         }
 
-        public static int GetItemID(List<Item> itemList, string prompt)
+        public static int GetItemID(List<AvailableItem> items, string prompt)
         {
             do
             {
-                int itemID = GetPositiveInteger(prompt);
-                if (itemList.Any(i => i.ItemID == itemID))
+                int itemID = GetInteger(prompt);
+                if (items.Any(i => i.ItemID == itemID))
                 {
                     return itemID;
                 }
@@ -106,39 +109,141 @@ namespace CafePointOfSale.UI.Utilities
             } while (true);
         }
 
-        public static int GetCategoryID(List<Category> availableCategories, string prompt)
+        public static int GetCategoryID(List<Category> categories, string prompt)
         {
-            throw new NotImplementedException();
+            do
+            {
+                int categoryID = GetInteger(prompt);
+                if (categories.Any(c => c.CategoryID == categoryID))
+                {
+                    return categoryID;
+                }
+
+                Console.WriteLine("Invalid Category ID");
+                AnyKey();
+            } while (true);
         }
 
-        public static void PrintActiveServers(List<Server> serverList)
+        public static void PrintActiveServers(List<Server> servers)
         {
-            throw new NotImplementedException();
+            PrintHeader(" Available Servers ", 30);
+            Console.WriteLine($"{"ID", -10} {"Name", -20}");
+            Console.WriteLine(new string('=', 30));
+            foreach (var s in servers)
+            {
+                Console.WriteLine($"{s.ServerID, -10} " +
+                                  $"{s.LastName + ", " + s.FirstName, -20} ");
+            }
+            Console.WriteLine();
+        }
+
+        public static void PrintOrderDetails(CafeOrder order)
+        {
+            PrintHeader(" Order Details ", 70);
+            Console.WriteLine($"{"Server ID",-10} {"Server Name", -20} {"Order Date", -20} {"Amount Due", -20}");
+            Console.WriteLine(new string('=', 70));
+            Console.WriteLine($"{order.ServerID, -10} " +
+                              $"{order.Server.LastName + ", " + order.Server.FirstName, -20} " +
+                              $"{order.OrderDate, -20:MM/dd/yyyy} " +
+                              $"{(order.AmountDue.HasValue ? order.AmountDue.Value.ToString("C2") : 0), -20}");
+            Console.WriteLine();
+            PrintOrderedItems(order.OrderItems);
         }
 
         public static void PrintOpenOrders(List<CafeOrder> orders)
         {
-            throw new NotImplementedException();
+            PrintHeader(" Open Orders ", 40);
+            Console.WriteLine($"{"Order ID", -10} {"Server ID", -10} {"Server Name", -20}");
+            Console.WriteLine(new string('=', 40));
+            foreach (var order in orders)
+            {
+                Console.WriteLine($"{order.OrderID, -10} " +
+                                  $"{order.ServerID, -10} " + 
+                                  $"{order.Server.LastName + ", " + order.Server.LastName, -20} ");
+            }
+            Console.WriteLine();
         }
 
-        public static void PrintAvailableCategories(List<Category> data)
+        public static void PrintAvailableCategories(List<Category> categories)
         {
-            throw new NotImplementedException();
+            PrintHeader(" Category List ", 30);
+            Console.WriteLine($"{"ID", -10} {"Category", -20}");
+            Console.WriteLine(new string('=', 30));
+            foreach(var c in categories)
+            {
+                Console.WriteLine($"{c.CategoryID, -10} " + 
+                                  $"{c.CategoryName, -20} ");
+            }
+            Console.WriteLine();
         }
 
-        public static void PrintAvailableItems(List<Item> itemList)
+        public static void PrintAvailableItems(List<AvailableItem> items)
         {
-            throw new NotImplementedException();
+            PrintHeader(" Available Items ", 100);
+            Console.WriteLine($"{"ID",-10} {"Name",-20} {"Price", -10} {"Description",-60}");
+            Console.WriteLine(new string('=', 100));
+            foreach (var i in items)
+            {
+                Console.WriteLine($"{i.ItemID,-10} " +
+                                  $"{i.ItemName,-20} " +
+                                  $"{"$ " + i.ItemPrice.Price,-10}" +
+                                  $"{(i.ItemDescription.Length > 57 ? i.ItemDescription.Substring(0, 56) + "..." : i.ItemDescription),-60}");
+            }
+            Console.WriteLine();
         }
 
-        public static void PrintOrderSummary(List<OrderItem> totalItems)
+        public static void PrintOrderSummary(CafeOrder order)
         {
-            throw new NotImplementedException();
+            PrintHeader(" Order Summary ", 50);
+            Console.WriteLine(" General Summary ");
+            Console.WriteLine(new string('=', 50));
+            Console.WriteLine($"{"Server ID",-10} {"Status",-10} {"Subtotal",-15} {"Tax",-15}");
+            Console.WriteLine($"{order.ServerID,-10} " +
+                              $"{(order.PaymentTypeID == null ? "Pending" : "Closed"),-10} " +
+                              $"{order.SubTotal.Value.ToString("C2"),-15} " +
+                              $"{order.Tax.Value.ToString("C2"),-15}");
+            Console.WriteLine();
+            PrintOrderedItems(order.OrderItems);
         }
 
-        internal static bool HasMoreItemsToAdd()
+
+        public static void PrintOrderedItems(List<OrderItem> items) 
         {
-            throw new NotImplementedException();
+            if (items.Count == 0)
+            {
+                Console.WriteLine("Ordered Items: none");
+            }
+            else
+            {
+                PrintHeader(" Ordered Items ", 55);
+                Console.WriteLine($"{"Item Name",-25} {"Quantity",-10} {"Extended Price",-10}");
+                Console.WriteLine(new string('=', 55));
+                foreach (var oi in items)
+                {
+                    Console.WriteLine($"{oi.ItemPrice.Item.ItemName,-25} " +
+                                      $"{oi.Quantity,-10} "  +
+                                      $"{oi.ExtendedPrice,-10} ");
+                }
+            }
+        }
+
+        public static bool HasMoreItemsToAdd()
+        {
+            do
+            {
+                Console.WriteLine("\nWould you like to add more items?");
+                int choice = GetInteger("1. Add another item\n2. Submit Order\nEnter choice: ", 1);
+                switch (choice)
+                {
+                    case 1:
+                        return true;
+                    case 2:
+                        return false;
+                    default:
+                        Console.WriteLine("Invalid choice.");
+                        continue;
+                }
+            } while (true);
         }
     }
 }
