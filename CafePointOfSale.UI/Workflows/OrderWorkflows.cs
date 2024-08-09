@@ -83,13 +83,17 @@ namespace CafePointOfSale.UI.Workflows
                     Console.WriteLine("Currently, there is no available item category.");
                     break;
                 }
-                
-                var availableCategories = gvaResult.Data;
 
                 do
                 {
+                    var availableCategories = gvaResult.Data;
                     IO.PrintAvailableCategories(availableCategories);
                     int categoryID = IO.GetCategoryID(availableCategories, "Enter the ID of an available category: ");
+
+                    /*
+                     * issue here: calling GetAvailableItems repeatedly
+                     */
+                   
                     var gaiResult = service.GetAvailableItems(categoryID);
                     if (!gaiResult.Ok)
                     {
@@ -113,21 +117,18 @@ namespace CafePointOfSale.UI.Workflows
 
                     var itemToAdd = availableItems.Single(i => i.ItemID == itemID);
 
-                    OrderItem newOrderItem = new OrderItem
+                    order.OrderItems.Add(new OrderItem
                     {
                         OrderID = orderID,
                         Quantity = quantity,
                         ExtendedPrice = itemToAdd.ItemPrice.Price * quantity,
                         ItemPrice = itemToAdd.ItemPrice
-                    };
+                    });
 
-                    order.OrderItems.Add(newOrderItem);
                     order = service.CalculateSubtotalAndTax(order);
                     IO.PrintOrderSummary(order);
 
                     hasMoreItemsToAdd = IO.HasMoreItemsToAdd();
-                    IO.AnyKey();
-                    Console.Clear();
 
                 } while (hasMoreItemsToAdd);
 
@@ -192,18 +193,38 @@ namespace CafePointOfSale.UI.Workflows
 
         public static void CancelOrder(IOrderService service)
         {
-            /*
-             * 1. Get open orders via service
-             * 2. Display open orders if any
-             * 3. Get orderID from user via IO
-             * 4. Process delete request via service
-             * 5. Display request result
-             */
             Console.Clear();
 
+            var gooResult = service.GetOpenOrders();
+            if (!gooResult.Ok)
+            {
+                Console.WriteLine(gooResult.Message);
+                IO.AnyKey();
+                return;
+            }
+            else if (gooResult.Data == null || !gooResult.Data.Any())
+            {
+                Console.WriteLine("Currently, there is no open order.");
+                IO.AnyKey();
+                return;
+            }
 
+            var openOrders = gooResult.Data;
+            IO.PrintOpenOrders(openOrders);
+            int orderID = IO.GetOrderID(openOrders, "Enter the ID of an open order: ");
 
+            var coResult = service.CancelOrder(orderID);
 
+            if (coResult.Ok)
+            {
+                Console.WriteLine("Order Successfully cancelled.");
+            }
+            else
+            {
+                Console.WriteLine(coResult.Message);
+            }
+
+            IO.AnyKey();
         }
 
         public static void ProcessPayment(IOrderService service)
