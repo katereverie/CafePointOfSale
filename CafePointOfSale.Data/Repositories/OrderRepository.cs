@@ -26,6 +26,9 @@ namespace CafePointOfSale.Data.Repositories
 
             if (order != null)
             {
+                _dbContext.OrderItem.RemoveRange(order.OrderItems);
+                _dbContext.SaveChanges();
+
                 _dbContext.CafeOrder.Remove(order);
                 _dbContext.SaveChanges();
             }
