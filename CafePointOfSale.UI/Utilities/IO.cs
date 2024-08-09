@@ -194,6 +194,7 @@ namespace CafePointOfSale.UI.Utilities
 
         public static void PrintOrderSummary(CafeOrder order)
         {
+            Console.Clear();
             PrintHeader(" Order Summary ", 50);
             Console.WriteLine(" General Summary ");
             Console.WriteLine(new string('=', 50));
