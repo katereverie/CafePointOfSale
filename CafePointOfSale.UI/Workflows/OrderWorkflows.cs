@@ -12,15 +12,9 @@ namespace CafePointOfSale.UI.Workflows
 
             var gasResult = service.GetActiveServers();
 
-            if (!gasResult.Ok)
+            if (!gasResult.Ok || gasResult.Data == null || !gasResult.Data.Any())
             {
-                Console.WriteLine(gasResult.Message);
-                IO.AnyKey();
-                return;
-            }
-            else if (gasResult.Data == null || !gasResult.Data.Any())
-            {
-                Console.WriteLine("Currently, there is server available.");
+                Console.WriteLine(gasResult.Ok ? "Currently, there is server available." : gasResult.Message);
                 IO.AnyKey();
                 return;
             }
@@ -31,180 +25,86 @@ namespace CafePointOfSale.UI.Workflows
             int serverID = IO.GetServerID(activeServers, "Enter the ID of an available server: ");
             CafeOrder newOrder = new CafeOrder { ServerID = serverID, OrderDate = DateTime.Now, PaymentTypeID = default};
             var coResult = service.CreateOrder(newOrder);
-
-            if (coResult.Ok)
-            {
-                Console.WriteLine($"New order created with ID {coResult.Data}");
-            }
-            else
-            {
-                Console.WriteLine(coResult.Message);
-            }
-
+            
+            Console.WriteLine(coResult.Ok ? $"New order created with ID {coResult.Data}" : coResult.Message);
             IO.AnyKey();
         }
 
-        public static void AddItemsToOrder(IOrderService service)
+    public static void AddItemsToOrder(IOrderService service)
+    {
+        Console.Clear();
+
+        var gooResult = service.GetOpenOrders();
+        if (!gooResult.Ok || gooResult.Data == null || !gooResult.Data.Any())
         {
-            Console.Clear();
-
-            var gooResult = service.GetOpenOrders();
-            if (!gooResult.Ok)
-            {
-                Console.WriteLine(gooResult.Message);
-                IO.AnyKey();
-                return;
-            }
-            else if (gooResult.Data == null || !gooResult.Data.Any())
-            {
-                Console.WriteLine("Currently, there is no open order.");
-                IO.AnyKey();
-                return;
-            }
-
-            var openOrders = gooResult.Data;
-            IO.PrintOpenOrders(openOrders);
-            int orderID = IO.GetOrderID(openOrders, "Enter the ID of an open order: ");
-            CafeOrder order = openOrders.Single(op => op.OrderID == orderID);
-
-            List<OrderItem> totalItems = new List<OrderItem>();
-            bool hasMoreItemsToAdd = true;
-
-            while (hasMoreItemsToAdd)
-            {
-                var gvaResult = service.GetAvailableCategories();
-                if (!gvaResult.Ok)
-                {
-                    Console.WriteLine(gvaResult.Message);
-                    break;
-                }
-                else if (gvaResult.Data == null || !gvaResult.Data.Any())
-                {
-                    Console.WriteLine("Currently, there is no available item category.");
-                    break;
-                }
-
-                do
-                {
-                    var availableCategories = gvaResult.Data;
-                    IO.PrintAvailableCategories(availableCategories);
-                    int categoryID = IO.GetCategoryID(availableCategories, "Enter the ID of an available category: ");
-
-                    /*
-                     * issue here: calling GetAvailableItems repeatedly
-                     */
-                   
-                    var gaiResult = service.GetAvailableItems(categoryID);
-                    if (!gaiResult.Ok)
-                    {
-                        Console.WriteLine(gaiResult.Message);
-                        break;
-                    }
-                    else if (!gaiResult.Data.Any())
-                    {
-                        Console.WriteLine("Currently, there is no available item.");
-                        break;
-                    }
-
-                    var availableItems = gaiResult.Data;
-                    IO.PrintAvailableItems(availableItems);
-                    int itemID = IO.GetItemID(availableItems, "Enter the ID of an available item: ");
-                    byte quantity = IO.GetQuantity("Enter Quantity: ");
-                    if (quantity == 0)
-                    {
-                        continue;
-                    }
-
-                    var itemToAdd = availableItems.Single(i => i.ItemID == itemID);
-
-                    order.OrderItems.Add(new OrderItem
-                    {
-                        OrderID = orderID,
-                        Quantity = quantity,
-                        ExtendedPrice = itemToAdd.ItemPrice.Price * quantity,
-                        ItemPrice = itemToAdd.ItemPrice
-                    });
-
-                    order = service.CalculateSubtotalAndTax(order);
-                    IO.PrintOrderSummary(order);
-
-                    hasMoreItemsToAdd = IO.HasMoreItemsToAdd();
-
-                } while (hasMoreItemsToAdd);
-
-            }
-
-            var atoResult = service.ProcessOrder(order);
-            if (atoResult.Ok)
-            {
-                Console.WriteLine("Order successfully processed.");
-            }
-            else
-            {
-                Console.WriteLine(atoResult.Message);
-            }
-
+            Console.WriteLine(gooResult.Ok ? "Currently, there is no open order." : gooResult.Message);
             IO.AnyKey();
+            return;
         }
 
-        public static void ViewOpenOrders(IOrderService service)
+        var openOrders = gooResult.Data;
+        IO.PrintOpenOrders(openOrders);
+        int orderID = IO.GetOrderID(openOrders, "Enter the ID of an open order: ");
+        CafeOrder order = openOrders.Single(op => op.OrderID == orderID);
+
+        bool continueAddingItems = true;
+        while (continueAddingItems)
         {
-            Console.Clear();
-
-            var gooResult = service.GetOpenOrders();
-
-            if (!gooResult.Ok)
+            var gvaResult = service.GetAvailableCategories();
+            if (!gvaResult.Ok || gvaResult.Data == null || !gvaResult.Data.Any())
             {
-                Console.WriteLine(gooResult.Message);
-                IO.AnyKey();
-                return;
-            }
-            else if (!gooResult.Data.Any())
-            {
-                Console.WriteLine("Currently, there is no open order.");
-                IO.AnyKey();
-                return;
+                Console.WriteLine(gvaResult.Ok ? "Currently, there is no available item category." : gvaResult.Message);
+                break;
             }
 
-            var openOrders = gooResult.Data;
-            IO.PrintOpenOrders(openOrders);
+            var availableCategories = gvaResult.Data;
+            IO.PrintAvailableCategories(availableCategories);
+            int categoryID = IO.GetCategoryID(availableCategories, "Enter the ID of an available category: ");
 
-            do
+            var gaiResult = service.GetAvailableItems(categoryID);
+            if (!gaiResult.Ok || !gaiResult.Data.Any())
             {
-                int choice = IO.GetInteger("Would you like to view details of a specific order?\n1. Yes\n0. No\nEnter choice: ");
-                if (choice == 0)
-                {
-                    IO.AnyKey();
-                    return;
-                }
-                else if (choice == 1)
-                {
-                    int orderID = IO.GetOrderID(openOrders, "Enter the ID of the order to view its details: ");
-                    var order = openOrders.Find(oo => oo.OrderID == orderID);
-                    IO.PrintOrderDetails(order);
-                    break;
-                }
+                Console.WriteLine(gaiResult.Ok ? "Currently, there is no available item." : gaiResult.Message);
+                continue;
+            }
 
-                Console.WriteLine("Invalid choice.");
-            } while (true);
+            var availableItems = gaiResult.Data;
+            IO.PrintAvailableItems(availableItems);
+            int itemID = IO.GetItemID(availableItems, "Enter the ID of an available item: ");
+            byte quantity = IO.GetQuantity("Enter Quantity: ");
+            
+            if (quantity > 0)
+            {
+                var itemToAdd = availableItems.Single(i => i.ItemID == itemID);
+                order.OrderItems.Add(new OrderItem
+                {
+                    OrderID = orderID,
+                    Quantity = quantity,
+                    ExtendedPrice = itemToAdd.ItemPrice.Price * quantity,
+                    ItemPrice = itemToAdd.ItemPrice
+                });
 
-            IO.AnyKey();
+                order = service.CalculateSubtotalAndTax(order);
+                IO.PrintOrderSummary(order);
+            }
+
+            continueAddingItems = IO.HasMoreItemsToAdd();
         }
+
+        var atoResult = service.ProcessOrder(order);
+        Console.WriteLine(atoResult.Ok ? "Order successfully processed." : atoResult.Message);
+        IO.AnyKey();
+    }
 
         public static void CancelOrder(IOrderService service)
         {
             Console.Clear();
 
             var gooResult = service.GetOpenOrders();
-            if (!gooResult.Ok)
+
+            if (!gooResult.Ok || gooResult.Data == null || !gooResult.Data.Any()) 
             {
-                Console.WriteLine(gooResult.Message);
-                IO.AnyKey();
-                return;
-            }
-            else if (gooResult.Data == null || !gooResult.Data.Any())
-            {
-                Console.WriteLine("Currently, there is no open order.");
+                Console.WriteLine(gooResult.Ok ? "Currently, there is no open order to cancel." : gooResult.Message);
                 IO.AnyKey();
                 return;
             }
@@ -215,15 +115,7 @@ namespace CafePointOfSale.UI.Workflows
 
             var coResult = service.CancelOrder(orderID);
 
-            if (coResult.Ok)
-            {
-                Console.WriteLine("Order Successfully cancelled.");
-            }
-            else
-            {
-                Console.WriteLine(coResult.Message);
-            }
-
+            Console.WriteLine(coResult.Ok ? "Order Successfully cancelled." : coResult.Message);
             IO.AnyKey();
         }
 
