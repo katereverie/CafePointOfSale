@@ -123,7 +123,7 @@ namespace CafePointOfSale.UI.Workflows
                         Console.WriteLine("Invalid choice.");
                         continue;
                 }
-                
+
             } while (true);
 
             IO.AnyKey();
@@ -146,8 +146,8 @@ namespace CafePointOfSale.UI.Workflows
             int orderID = IO.GetOrderID(openOrders, "Enter the ID of an open order: ");
 
             var coResult = service.CancelOrder(orderID);
-
             Console.WriteLine(coResult.Ok ? "Order Successfully cancelled." : coResult.Message);
+
             IO.AnyKey();
         }
 
@@ -193,7 +193,8 @@ namespace CafePointOfSale.UI.Workflows
                 return;
             }
 
-            service.AddPaymentMethod(paymentOption);
+            var apmResult = service.AddPaymentMethod(order, paymentOption);
+            Console.WriteLine(apmResult.Ok ? $"Payment method added to order {order.OrderID}" : apmResult.Message);
         }
     }
 }
