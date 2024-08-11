@@ -50,32 +50,27 @@ namespace CafePointOfSale.UI.Workflows
         bool continueAddingItems = true;
         while (continueAddingItems)
         {
-            var gvaResult = service.GetAvailableCategories();
-            if (!gvaResult.Ok || gvaResult.Data == null || !gvaResult.Data.Any())
+            var gaciResult = service.GetAllCurrentItems();
+            if (!gaciResult.Ok || !gaciResult.Data.Any())
             {
-                Console.WriteLine(gvaResult.Ok ? "Currently, there is no available item category." : gvaResult.Message);
-                break;
-            }
-
-            var availableCategories = gvaResult.Data;
-            IO.PrintAvailableCategories(availableCategories);
-            int categoryID = IO.GetCategoryID(availableCategories, "Enter the ID of an available category: ");
-
-            var gaiResult = service.GetAvailableItems(categoryID);
-            if (!gaiResult.Ok || !gaiResult.Data.Any())
-            {
-                Console.WriteLine(gaiResult.Ok ? "Currently, there is no available item." : gaiResult.Message);
+                Console.WriteLine(gaciResult.Ok ? "At current time, there is no available item." : gaciResult.Message);
                 continue;
             }
 
-            var availableItems = gaiResult.Data;
-            IO.PrintAvailableItems(availableItems);
-            int itemID = IO.GetItemID(availableItems, "Enter the ID of an available item: ");
+            var allCurrentItems = gaaiResult.Data;
+            var allCurrentCategories = allCurrentItems.Select(i = i.Category);
+
+            IO.PrintAvailableCategories(allCurrentCategories);
+            int categoryID = IO.GetCategoryID(allCurrentCategories, "Enter the ID of an available category: ");
+
+            var currentItemsByCategory = allCurrentItems.Where(i => i.Category.CategoryID == categoryID).ToList();
+            IO.PrintAvailableItems(currentItemsByCategory);
+            int itemID = IO.GetItemID(currentItemsByCategory, "Enter the ID of an available item: ");
+
             byte quantity = IO.GetQuantity("Enter Quantity: ");
-            
             if (quantity > 0)
             {
-                var itemToAdd = availableItems.Single(i => i.ItemID == itemID);
+                var itemToAdd = currentItemsByCategory.Single(i => i.ItemID == itemID);
                 order.OrderItems.Add(new OrderItem
                 {
                     OrderID = orderID,
@@ -91,8 +86,8 @@ namespace CafePointOfSale.UI.Workflows
             continueAddingItems = IO.HasMoreItemsToAdd();
         }
 
-        var atoResult = service.ProcessOrder(order);
-        Console.WriteLine(atoResult.Ok ? "Order successfully processed." : atoResult.Message);
+        var poResult = service.ProcessOrder(order);
+        Console.WriteLine(poResult.Ok ? "Order successfully processed." : poResult.Message);
         IO.AnyKey();
     }
 
