@@ -18,9 +18,19 @@ namespace CafePointOfSale.Application.Services
             _timeOfDayRepo = timeOfDayRepo;
         }
 
-        public Result AddPaymentMethod(int paymentOptionID)
+        public Result AddPaymentMethod(CafeOrder order, int paymentOptionID)
         {
-            throw new NotImplementedException();
+            try
+            {
+                order.PaymentTypeID = paymentOptionID;
+                _orderRepo.Update(order);
+
+                return ResultFactory.Success();
+            }
+            catch (Exception ex)
+            {
+                return ResultFactory.Fail(ex.Message);
+            }
         }
 
         public Result ProcessOrder(CafeOrder order)
