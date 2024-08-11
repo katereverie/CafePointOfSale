@@ -39,6 +39,22 @@ namespace CafePointOfSale.UI.Utilities
             } while (true);
         }
 
+        public static DateOnly GetDate(string prompt) 
+        {
+            DateOnly date;
+
+            do
+            {
+                Console.Write(prompt);
+                if (DateTime.TryParse(Console.ReadLine(), out date)) 
+                {
+                    return date;
+                }
+
+                Console.WriteLine("Invalid Date format.");
+            } while (true);
+        }
+
         public static int GetServerID (List<Server> servers, string prompt)
         {
             do
