@@ -116,7 +116,46 @@ namespace CafePointOfSale.UI.Workflows
 
         public static void ProcessPayment(IOrderService service)
         {
-            
+            // 1. (x) Get open orders via service
+            // 2. (x) display open orders via IO
+            // 3. (x) Get orderID from users via IO
+            // 4. (x) Get payment types via service
+            // 5. (x) display payment types via IO
+            // 6. Get payment type option from users via IO
+            // 7. add chosen payment type ID to chosen order via service
+
+            Console.Clear();
+
+            var gooResult = service.GetOpenOrders();
+            if (!gooResult.Ok || gooResult.Data == null || !gooResult.Data.Any())
+            {
+                Console.WriteLine(gooResult.Ok ? "Currently, there is no open order." : gooResult.Message);
+                IO.AnyKey();
+                return;
+            }
+
+            var openOrders = gooResult.Data;
+            IO.PrintOpenOrders(openOrders);
+            int orderID = IO.GetOrderID(openOrders, "Enter the ID of an open order: ");
+            CafeOrder order = openOrders.Single(op => op.OrderID == orderID);
+
+            var gptResult = service.GetPaymentTypes();
+            if (!gptResult.Ok || gptResult.Data == null || !gptResult.Data.Any())
+            {
+                Console.WriteLine(gptResult.Ok ? "Currently, there is no available payment option." : gooResult.Message);
+                IO.AnyKey();
+                return;
+            }
+
+            var paymentOptions = gptResult.Data;
+            IO.PrintPaymentOptions(paymentOptions);
+            int paymentOption = IO.GetPaymentOption(paymentOption, "Enter a Payment Option: ");
+            // the user can opt out by entering 0
+            if (paymentOption == 0) 
+            {
+                return;
+            }
+            service.AddPaymentMethod(paymentOption);
         }
     }
 }
