@@ -16,14 +16,14 @@ namespace CafePointOfSale.Data.Repositories
 
         public List<CurrentItem> GetAllCurrentItems(int timeOfDayID)
         {
-            var items = _dbContext.Item
+            var allItems = _dbContext.Item
                 .Include(i => i.Category)
                 .Include(i => i.ItemPrices)
                 .ToList();
 
             var currentItems = new List<CurrentItem>();
 
-            foreach (var item in items)
+            foreach (var item in allItems)
             {
                 var currentItemPrice = item.ItemPrices.FirstOrDefault(ip => ip.TimeOfDayID == timeOfDayID && (ip.EndDate == null || ip.EndDate > DateTime.Now));
                 if (currentItemPrice != null)
