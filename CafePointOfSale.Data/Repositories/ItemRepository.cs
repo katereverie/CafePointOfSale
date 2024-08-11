@@ -14,37 +14,32 @@ namespace CafePointOfSale.Data.Repositories
             _dbContext = new CafeContext(connectionString);
         }
 
-        public List<Category> GetAvailableCategories()
-        {
-            return _dbContext.Category.ToList();
-        }
-
-        public List<AvailableItem> GetAvailableItems(int categoryID, int timeOfDayID)
+        public List<CurrentItem> GetAllCurrentItems(int timeOfDayID)
         {
             var items = _dbContext.Item
                 .Include(i => i.Category)
                 .Include(i => i.ItemPrices)
-                .Where(i => i.CategoryID == categoryID)
                 .ToList();
 
-            var availableItems = new List<AvailableItem>();
+            var currentItems = new List<CurrentItem>();
 
             foreach (var item in items)
             {
                 var currentItemPrice = item.ItemPrices.FirstOrDefault(ip => ip.TimeOfDayID == timeOfDayID && (ip.EndDate == null || ip.EndDate > DateTime.Now));
                 if (currentItemPrice != null)
                 {
-                    availableItems.Add(new AvailableItem
+                    currentItems.Add(new CurrentItem
                     {
                         ItemID = item.ItemID,
                         ItemName = item.ItemName,
                         ItemDescription = item.ItemDescription,
+                        Category = item.Category,
                         ItemPrice = currentItemPrice
                     });
                 }
             }
 
-            return availableItems;
+            return currentItems;
         }
     }
 }

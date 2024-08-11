@@ -5,7 +5,6 @@ namespace CafePointOfSale.Core.Interfaces.Repositories
 {
     public interface IItemRepository
     {
-        List<Category> GetAvailableCategories();
-        List<AvailableItem> GetAvailableItems(int categoryID, int timeOfDayID); // based on time of the day
+        List<CurrentItem> GetAllCurrentItems(int timeOfDayID); // based on time of the day
     }
 }
