@@ -11,8 +11,7 @@ namespace CafePointOfSale.Core.Interfaces.Services
         Result CancelOrder(int orderID); // delete CafeOrder && a list of its OrderItems
         Result<List<Server>> GetActiveServers();
         Result<List<PaymentType>> GetPaymentTypes();
-        Result<List<Category>> GetAvailableCategories();
-        Result<List<AvailableItem>> GetAvailableItems(int categoryID);
+        Result<List<CurrentItem>> GetAllCurrentItems();
         Result<List<CafeOrder>> GetOpenOrders();
         CafeOrder CalculateSubtotalAndTax(CafeOrder order);
     }

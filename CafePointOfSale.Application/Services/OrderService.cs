@@ -96,21 +96,7 @@ namespace CafePointOfSale.Application.Services
             }
         }
 
-        public Result<List<Category>> GetAvailableCategories()
-        {
-            try
-            {
-                var categoryList = _itemRepo.GetAvailableCategories();
-
-                return ResultFactory.Success(categoryList);
-            }
-            catch (Exception ex)
-            {
-                return ResultFactory.Fail<List<Category>>(ex.Message);
-            }
-        }
-
-        public Result<List<AvailableItem>> GetAvailableItems(int categoryID)
+        public Result<List<AvailableItem>> GetAllCurrentItems()
         {
             try
             {
@@ -122,7 +108,7 @@ namespace CafePointOfSale.Application.Services
                 }
                 else
                 {
-                    var itemList = _itemRepo.GetAvailableItems(categoryID, timeOfDayID);
+                    var itemList = _itemRepo.GetAvailableItems(timeOfDayID);
                     return ResultFactory.Success(itemList);
                 }
             }
