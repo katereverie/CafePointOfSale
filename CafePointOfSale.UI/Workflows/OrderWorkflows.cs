@@ -57,8 +57,8 @@ namespace CafePointOfSale.UI.Workflows
                 continue;
             }
 
-            var allCurrentItems = gaaiResult.Data;
-            var allCurrentCategories = allCurrentItems.Select(i = i.Category);
+            var allCurrentItems = gaciResult.Data;
+            var allCurrentCategories = allCurrentItems.Where(i => i.Category).ToList();
 
             IO.PrintAvailableCategories(allCurrentCategories);
             int categoryID = IO.GetCategoryID(allCurrentCategories, "Enter the ID of an available category: ");
@@ -116,7 +116,7 @@ namespace CafePointOfSale.UI.Workflows
 
         public static void ProcessPayment(IOrderService service)
         {
-
+            
         }
     }
 }
