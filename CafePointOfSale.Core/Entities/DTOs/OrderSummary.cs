@@ -6,6 +6,6 @@
         public byte Quantity { get; set; }
         public decimal Subtotal { get; set; }
         public decimal Tax { get; set; }
-        public List<AvailableItem> AddedItems { get; set; }
+        public List<CurrentItem> AddedItems { get; set; }
     }
 }
