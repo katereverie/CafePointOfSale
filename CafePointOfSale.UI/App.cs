@@ -89,6 +89,7 @@ namespace CafePointOfSale.UI
                 switch (option)
                 {
                     case 1:
+                        OrderWorkflows.ProcessPayment(_serviceFactory.CreateOrderService());
                         break;
                     case 0:
                         return;
