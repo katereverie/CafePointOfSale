@@ -218,16 +218,14 @@ namespace CafePointOfSale.UI.Utilities
             Console.WriteLine($"{"Server ID",-10} {"Status",-10} {"Subtotal",-15} {"Tax",-15}");
             Console.WriteLine($"{order.ServerID,-10} " +
                               $"{(order.PaymentTypeID == null ? "Pending" : "Closed"),-10} " +
-                              $"{order.SubTotal.Value.ToString("C2"),-15} " +
-                              $"{order.Tax.Value.ToString("C2"),-15}");
+                              $"{(order.SubTotal.HasValue ? order.SubTotal.Value.ToString("C2") : 0),-15} " +
+                              $"{(order.Tax.HasValue ? order.Tax.Value.ToString("C2") : 0),-15}");
             Console.WriteLine();
             PrintOrderedItems(order.OrderItems);
         }
-
-
-        public static void PrintOrderedItems(List<OrderItem> items) 
+        public static void PrintOrderedItems(List<OrderItem>? items) 
         {
-            if (items.Count == 0)
+            if (items == null || items.Count == 0)
             {
                 Console.WriteLine("Ordered Items: none");
             }

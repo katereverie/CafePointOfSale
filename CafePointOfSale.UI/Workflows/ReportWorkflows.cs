@@ -12,7 +12,7 @@ namespace CafePointOfSale.UI.Workflows
             * 3. Display fetched orders and their itens via IO
             */
             Console.Clear();
-            DateOnly date = IO.GetDate();
+            DateTime date = IO.GetDate("Enter a Date to view the sales report on the date: ");
 
             // Each date may have several orders. 
             // Each order may have several items
