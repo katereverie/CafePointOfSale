@@ -5,6 +5,6 @@ namespace CafePointOfSale.Core.Interfaces.Services
 {
     public interface IReportService
     {
-        Result<List<CafeOrder>> GetCafeOrdersByDate(DateOnly date);
+        Result<List<CafeOrder>> GetCafeOrdersByDate(DateTime date);
     }
 }
