@@ -40,6 +40,7 @@ namespace CafePointOfSale.UI.Utilities
             } while (true);
         }
 
+        // refactor this one, test it out
         public static DateTime GetDate(string prompt) 
         {
             DateTime date;
@@ -287,6 +288,11 @@ namespace CafePointOfSale.UI.Utilities
 
                 Console.WriteLine("Invalid option.");
             } while (true);
+        }
+
+        public static void PrintDailySalesReport(List<CafeOrder> data)
+        {
+            throw new NotImplementedException();
         }
     }
 }
