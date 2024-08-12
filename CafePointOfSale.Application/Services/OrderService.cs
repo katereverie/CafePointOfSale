@@ -106,7 +106,7 @@ namespace CafePointOfSale.Application.Services
             }
         }
 
-        public Result<List<AvailableItem>> GetAllCurrentItems()
+        public Result<List<CurrentItem>> GetAllCurrentItems()
         {
             try
             {
@@ -114,17 +114,17 @@ namespace CafePointOfSale.Application.Services
 
                 if (timeOfDayID == -1)
                 {
-                    return ResultFactory.Fail<List<AvailableItem>>("At the current time of day, there is no available item.");
+                    return ResultFactory.Fail<List<CurrentItem>>("At the current time of day, there is no available item.");
                 }
                 else
                 {
-                    var itemList = _itemRepo.GetAvailableItems(timeOfDayID);
+                    var itemList = _itemRepo.GetAllCurrentItems(timeOfDayID);
                     return ResultFactory.Success(itemList);
                 }
             }
             catch (Exception ex)
             {
-                return ResultFactory.Fail<List<AvailableItem>>(ex.Message);
+                return ResultFactory.Fail<List<CurrentItem>>(ex.Message);
             }
         }
 
