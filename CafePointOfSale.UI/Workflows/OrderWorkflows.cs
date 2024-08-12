@@ -58,13 +58,13 @@ namespace CafePointOfSale.UI.Workflows
                 }
 
                 var allCurrentItems = gaciResult.Data;
-                var allCurrentCategories = allCurrentItems.Where(i => i.Category).ToList();
+                var allCurrentCategories = allCurrentItems.Select(i => i.Category).ToList();
 
                 IO.PrintAvailableCategories(allCurrentCategories);
                 int categoryID = IO.GetCategoryID(allCurrentCategories, "Enter the ID of an available category: ");
 
                 var currentItemsByCategory = allCurrentItems.Where(i => i.Category.CategoryID == categoryID).ToList();
-                IO.PrintAvailableItems(currentItemsByCategory);
+                IO.PrintCurrentItems(currentItemsByCategory);
                 int itemID = IO.GetItemID(currentItemsByCategory, "Enter the ID of an available item: ");
 
                 byte quantity = IO.GetQuantity("Enter Quantity: ");
@@ -107,8 +107,10 @@ namespace CafePointOfSale.UI.Workflows
             var openOrders = gooResult.Data;
             IO.PrintOpenOrders(openOrders);
 
+
             do
-            {                
+            {
+                int choice = IO.GetInteger("Would you like to view details of a specific order?\n1. Yes\n2. No, I'd like to return");                
                 switch (choice) 
                 {
                     case 0:
@@ -123,6 +125,8 @@ namespace CafePointOfSale.UI.Workflows
                         Console.WriteLine("Invalid choice.");
                         continue;
                 }
+
+                break;
 
             } while (true);
 
@@ -186,7 +190,7 @@ namespace CafePointOfSale.UI.Workflows
 
             var paymentOptions = gptResult.Data;
             IO.PrintPaymentOptions(paymentOptions);
-            int paymentOption = IO.GetPaymentOption(paymentOption, "Enter a Payment Option: ");
+            int paymentOption = IO.GetPaymentOption(paymentOptions, "Enter a Payment Option or 0 to return: ");
             // the user can opt out by entering 0
             if (paymentOption == 0) 
             {
