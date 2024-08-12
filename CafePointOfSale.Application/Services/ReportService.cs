@@ -17,7 +17,9 @@ namespace CafePointOfSale.Application.Services
         {
             try
             {
-                _orderRepo.GetOrdersByDate();
+                var orders = _orderRepo.GetOrdersByDate(date);
+
+                return ResultFactory.Success(orders);
             }
             catch (Exception ex)
             {
