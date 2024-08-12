@@ -7,7 +7,7 @@ namespace CafePointOfSale.Core.Interfaces.Services
     {
         Result<int> CreateOrder(CafeOrder order); // return an new orderID
         Result ProcessOrder(CafeOrder order);
-        Result AddPaymentMethod(int paymentOptionID);
+        Result AddPaymentMethod(CafeOrder order, int paymentOptionID);
         Result CancelOrder(int orderID); // delete CafeOrder && a list of its OrderItems
         Result<List<Server>> GetActiveServers();
         Result<List<PaymentType>> GetPaymentTypes();
