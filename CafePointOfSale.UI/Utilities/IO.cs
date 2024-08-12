@@ -1,5 +1,6 @@
 ﻿using CafePointOfSale.Core.Entities.DTOs;
 using CafePointOfSale.Core.Entities.Tables;
+using Microsoft.Identity.Client;
 
 namespace CafePointOfSale.UI.Utilities
 {
@@ -39,9 +40,9 @@ namespace CafePointOfSale.UI.Utilities
             } while (true);
         }
 
-        public static DateOnly GetDate(string prompt) 
+        public static DateTime GetDate(string prompt) 
         {
-            DateOnly date;
+            DateTime date;
 
             do
             {
@@ -86,7 +87,7 @@ namespace CafePointOfSale.UI.Utilities
             } while (true);
         }
 
-        public static int GetItemID(List<AvailableItem> items, string prompt)
+        public static int GetItemID(List<CurrentItem> items, string prompt)
         {
             do
             {
@@ -193,9 +194,9 @@ namespace CafePointOfSale.UI.Utilities
             Console.WriteLine();
         }
 
-        public static void PrintAvailableItems(List<AvailableItem> items)
+        public static void PrintCurrentItems(List<CurrentItem> items)
         {
-            PrintHeader(" Available Items ", 100);
+            PrintHeader(" Current Items ", 100);
             Console.WriteLine($"{"ID",-10} {"Name",-20} {"Price", -10} {"Description",-60}");
             Console.WriteLine(new string('=', 100));
             foreach (var i in items)
@@ -260,6 +261,33 @@ namespace CafePointOfSale.UI.Utilities
                         Console.WriteLine("Invalid choice.");
                         continue;
                 }
+            } while (true);
+        }
+
+        public static void PrintPaymentOptions(List<PaymentType> paymentOptions)
+        {
+            PrintHeader(" Payment Options ", 40);
+            Console.WriteLine($"{"Option", -10} {"Payment Method", -20}");
+            Console.WriteLine(new string('=', 40));
+            foreach(var po in paymentOptions) 
+            {
+                Console.WriteLine($"{po.PaymentTypeID, -10} " + 
+                                  $"{po.PaymentTypeName, -20} ");
+            }
+            Console.WriteLine();
+        }
+
+        public static int GetPaymentOption(List<PaymentType> paymentOptions, string prompt)
+        {
+            do
+            {
+                int option = GetInteger(prompt);
+                if (paymentOptions.Any(po => po.PaymentTypeID == option) || option == 0) 
+                {
+                    return option;
+                }
+
+                Console.WriteLine("Invalid option.");
             } while (true);
         }
     }
