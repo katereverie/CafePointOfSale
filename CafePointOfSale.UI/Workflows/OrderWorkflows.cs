@@ -23,7 +23,7 @@ namespace CafePointOfSale.UI.Workflows
             IO.PrintActiveServers(activeServers);
 
             int serverID = IO.GetServerID(activeServers, "Enter the ID of an available server: ");
-            CafeOrder newOrder = new CafeOrder { ServerID = serverID, OrderDate = DateTime.Now, PaymentTypeID = default};
+            CafeOrder newOrder = new CafeOrder { ServerID = serverID, OrderDate = DateTime.Now, PaymentTypeID = default, Server = activeServers.Single(s => s.ServerID == serverID)};
             var coResult = service.CreateOrder(newOrder);
             
             Console.WriteLine(coResult.Ok ? $"New order created with ID {coResult.Data}" : coResult.Message);
@@ -51,7 +51,7 @@ namespace CafePointOfSale.UI.Workflows
             while (continueAddingItems)
             {
                 var gaciResult = service.GetAllCurrentItems();
-                if (!gaciResult.Ok || !gaciResult.Data.Any())
+                if (!gaciResult.Ok || gaciResult.Data == null || !gaciResult.Data.Any())
                 {
                     Console.WriteLine(gaciResult.Ok ? "At current time, there is no available item." : gaciResult.Message);
                     continue;
@@ -71,7 +71,7 @@ namespace CafePointOfSale.UI.Workflows
                 if (quantity > 0)
                 {
                     var itemToAdd = currentItemsByCategory.Single(i => i.ItemID == itemID);
-                    order.OrderItems.Add(new OrderItem
+                    order.OrderItems?.Add(new OrderItem
                     {
                         OrderID = orderID,
                         Quantity = quantity,
@@ -118,7 +118,7 @@ namespace CafePointOfSale.UI.Workflows
                         return;
                     case 1:
                         int orderID = IO.GetOrderID(openOrders, "Enter the ID of the order to view its details: ");
-                        var order = openOrders.Find(oo => oo.OrderID == orderID);
+                        var order = openOrders.Single(oo => oo.OrderID == orderID);
                         IO.PrintOrderDetails(order);
                         break;
                     default:
