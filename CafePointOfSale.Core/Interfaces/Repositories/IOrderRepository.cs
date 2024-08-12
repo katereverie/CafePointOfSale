@@ -10,6 +10,7 @@ namespace CafePointOfSale.Core.Interfaces.Repositories
         CafeOrder? GetByOrderID(int orderID);
         CafeOrder GetOrderDetails(int orderID); // include a list of its OrderItems
         List<CafeOrder> GetOpenOrders(); // paymentTypeID null
+        List<CafeOrder> GetOrdersByDate(DateTime date);
         List<PaymentType> GetAllPaymentTypes();
         List<Server> GetActiveServers();
     }

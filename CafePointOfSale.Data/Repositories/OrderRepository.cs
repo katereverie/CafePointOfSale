@@ -77,5 +77,13 @@ namespace CafePointOfSale.Data.Repositories
                 .Where(o => o.OrderID == orderID)
                 .FirstOrDefault();
         }
+
+        public List<CafeOrder> GetOrdersByDate(DateTime date)
+        {
+            return _dbContext.CafeOrder
+                .Include(o => o.OrderItems)
+                .Where(o => o.OrderDate != null && o.OrderDate >= date && o.OrderDate <= date.AddDays(1))
+                .ToList();
+        }
     }
 }
