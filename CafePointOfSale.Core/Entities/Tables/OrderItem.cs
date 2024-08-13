@@ -11,7 +11,7 @@ namespace CafePointOfSale.Core.Entities.Tables
         public byte Quantity { get; set; }
         public decimal ExtendedPrice { get; set; }
 
-        public ItemPrice ItemPrice { get; set; }
-        public CafeOrder CafeOrder { get; set; }
+        public required ItemPrice ItemPrice { get; set; }
+        public required CafeOrder CafeOrder { get; set; }
     }
 }

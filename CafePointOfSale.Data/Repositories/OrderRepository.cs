@@ -82,6 +82,8 @@ namespace CafePointOfSale.Data.Repositories
         {
             return _dbContext.CafeOrder
                 .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.ItemPrice)
+                .ThenInclude(ip => ip.Item)
                 .Where(o => o.OrderDate != null && o.OrderDate >= date && o.OrderDate <= date.AddDays(1))
                 .ToList();
         }

@@ -9,5 +9,6 @@ namespace CafePointOfSale.Core.Entities.DTOs
         public int TotalOrderItems { get; set; }
         public decimal TotalRevenue { get; set; }
         public required List<OrderItem> OrderItems { get; set; }
+        public required List<OrderItem> TopThreeItems { get; set; }
     }
 }
