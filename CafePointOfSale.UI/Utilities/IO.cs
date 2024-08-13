@@ -141,6 +141,19 @@ namespace CafePointOfSale.UI.Utilities
                 AnyKey();
             } while (true);
         }
+        public static int GetPaymentOption(List<PaymentType> paymentOptions, string prompt)
+        {
+            do
+            {
+                int option = GetInteger(prompt);
+                if (paymentOptions.Any(po => po.PaymentTypeID == option) || option == 0) 
+                {
+                    return option;
+                }
+
+                Console.WriteLine("Invalid option.");
+            } while (true);
+        }
 
         public static void PrintActiveServers(List<Server> servers)
         {
@@ -276,23 +289,35 @@ namespace CafePointOfSale.UI.Utilities
             Console.WriteLine();
         }
 
-        public static int GetPaymentOption(List<PaymentType> paymentOptions, string prompt)
-        {
-            do
-            {
-                int option = GetInteger(prompt);
-                if (paymentOptions.Any(po => po.PaymentTypeID == option) || option == 0) 
-                {
-                    return option;
-                }
-
-                Console.WriteLine("Invalid option.");
-            } while (true);
-        }
 
         public static void PrintDailySalesReport(List<CafeOrder> data)
         {
-            throw new NotImplementedException();
+            int totalOrders = 0;
+            int totalOrderItems = 0;
+            decimal totalRevenue = 0m;
+
+            foreach (var order in data) 
+            {
+                totalOrders++;
+                if (order.OrderItems != null) 
+                {
+                    order.OrderItems.ForEach(oi => totalOrderItems += oi.Quantity);
+                }
+                totalRevenue += order.AmountDue.HasValue ? order.AmountDue.Value : 0;
+            }
+
+            PrintHeader($" Sales Summary of {data.First().OrderDate}", 80);
+            Console.WriteLine($"{"Total Orders", -20} {"Total Order Items",-20} {"Total Revenue ($)", -20}");
+            Console.WriteLine(new string('=', 80));
+            Console.WriteLine($"{totalOrders, -20}" +
+                              $"{totalOrderItems, -20} " +
+                              $"{totalRevenue, -20} ");
+            Console.WriteLine();
+            PrintHeader($" Top 3 Selling Items on {data.First().OrderDate}", 80);
+            Console.WriteLine($"{"Name", -20} {"Sold Quantity", -20} {"Revenue", -20}");
+            Console.WriteLine(new string('=', 80));
+            Console.WriteLine();
+            
         }
     }
 }
