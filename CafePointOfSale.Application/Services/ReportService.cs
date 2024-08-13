@@ -13,17 +13,36 @@ namespace CafePointOfSale.Application.Services
         {
             _orderRepo = orderRepo;
         }
-        public Result<List<CafeOrder>> GetCafeOrdersByDate(DateTime date)
+        public Result<DailySalesSummary> GetSalesReportByDate(DateTime date)
         {
             try
             {
                 var orders = _orderRepo.GetOrdersByDate(date);
 
-                return ResultFactory.Success(orders);
+                int totalOrderItems = 0;
+                decimal totalRevenue = 0m;
+                orders.ForEach(o => o.OrderItems.ForEach(oi => totalOrderItems += oi.Quantity));
+                orders.ForEach(o => totalRevenue += o.AmountDue ?? 0);
+
+                var summary = new DailySalesSummary 
+                {
+                    Date = date,
+                    TotalOrders = orders.Count,
+                    TotalOrderItems = totalOrderItems,
+                    TotalRevenue = totalRevenue,
+                    OrderItems = new(),
+                    TopThreeItems = new()
+                };
+
+                orders.ForEach(o => o.OrderItems.ForEach(oi => summary.OrderItems.Add(oi)));
+                var sortedOrderItems = summary.OrderItems.OrderByDescending(oi => oi.ExtendedPrice).ToList();
+                summary.TopThreeItems.AddRange(sortedOrderItems);
+
+                return ResultFactory.Success(summary);
             }
             catch (Exception ex)
             {
-                return ResultFactory.Fail<List<CafeOrder>>(ex.Message);
+                return ResultFactory.Fail<DailySalesSummary>(ex.Message);
             }
         }
     }
