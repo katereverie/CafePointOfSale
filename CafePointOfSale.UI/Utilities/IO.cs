@@ -289,35 +289,26 @@ namespace CafePointOfSale.UI.Utilities
             Console.WriteLine();
         }
 
-
-        public static void PrintDailySalesReport(List<CafeOrder> data)
+        // probably wrong with the extended price and quantity because each item may have overlappings 
+        public static void PrintDailySalesReport(DailySalesSummary summary)
         {
-            int totalOrders = 0;
-            int totalOrderItems = 0;
-            decimal totalRevenue = 0m;
-
-            foreach (var order in data) 
-            {
-                totalOrders++;
-                if (order.OrderItems != null) 
-                {
-                    order.OrderItems.ForEach(oi => totalOrderItems += oi.Quantity);
-                }
-                totalRevenue += order.AmountDue.HasValue ? order.AmountDue.Value : 0;
-            }
-
-            PrintHeader($" Sales Summary of {data.First().OrderDate}", 80);
+            PrintHeader($" Sales Summary of {summary.Date}", 80);
             Console.WriteLine($"{"Total Orders", -20} {"Total Order Items",-20} {"Total Revenue ($)", -20}");
             Console.WriteLine(new string('=', 80));
-            Console.WriteLine($"{totalOrders, -20}" +
-                              $"{totalOrderItems, -20} " +
-                              $"{totalRevenue, -20} ");
+            Console.WriteLine($"{summary.TotalOrders, -20}" +
+                              $"{summary.TotalOrderItems, -20} " +
+                              $"{summary.TotalRevenue, -20} ");
             Console.WriteLine();
-            PrintHeader($" Top 3 Selling Items on {data.First().OrderDate}", 80);
+            PrintHeader($" Top 3 Selling Items on {summary.Date}", 80);
             Console.WriteLine($"{"Name", -20} {"Sold Quantity", -20} {"Revenue", -20}");
             Console.WriteLine(new string('=', 80));
+            foreach(var item in summary.TopThreeItems) 
+            {
+                Console.WriteLine($"{item.ItemPrice.Item.ItemName, -20} " +
+                                  $"{item.Quantity, -20} " +
+                                  $"{item.ExtendedPrice, -20}");
+            }
             Console.WriteLine();
-            
         }
     }
 }
