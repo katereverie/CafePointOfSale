@@ -20,7 +20,7 @@ namespace CafePointOfSale.Data.Repositories
             };
         }
 
-        public int GetTimeOfDayID()
+        public int? GetTimeOfDayID()
         {
             var currentTimeOnly = CurrentTime.TimeOfDay;
 
@@ -32,7 +32,7 @@ namespace CafePointOfSale.Data.Repositories
                 }
             }
 
-            return -1;
+            return null;
         }
     }
 }

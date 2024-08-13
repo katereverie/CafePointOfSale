@@ -14,8 +14,13 @@ namespace CafePointOfSale.Data.Repositories
             _dbContext = new CafeContext(connectionString);
         }
 
-        public List<CurrentItem> GetAllCurrentItems(int timeOfDayID)
+        public List<CurrentItem>? GetAllCurrentItems(int? timeOfDayID)
         {
+            if (timeOfDayID == null) 
+            {
+                return null;
+            }
+            
             var allItems = _dbContext.Item
                 .Include(i => i.Category)
                 .Include(i => i.ItemPrices)

@@ -110,17 +110,17 @@ namespace CafePointOfSale.Application.Services
         {
             try
             {
-                int timeOfDayID = _timeOfDayRepo.GetTimeOfDayID();
+                int? timeOfDayID = _timeOfDayRepo.GetTimeOfDayID();
+                
+                if (timeOfDayID == null)
+                {
+                    return ResultFactory.Fail<List<CurrentItem>>("Cafe is closed at current time.");
+                }
 
-                if (timeOfDayID == -1)
-                {
-                    return ResultFactory.Fail<List<CurrentItem>>("At the current time of day, there is no available item.");
-                }
-                else
-                {
-                    var itemList = _itemRepo.GetAllCurrentItems(timeOfDayID);
-                    return ResultFactory.Success(itemList);
-                }
+                var itemList = _itemRepo.GetAllCurrentItems(timeOfDayID);
+                return itemList == null
+                    ? ResultFactory.Fail<List<CurrentItem>>("At current time, there is no available item.")
+                    : ResultFactory.Success(itemList);
             }
             catch (Exception ex)
             {

@@ -23,7 +23,13 @@ namespace CafePointOfSale.UI.Workflows
             IO.PrintActiveServers(activeServers);
 
             int serverID = IO.GetServerID(activeServers, "Enter the ID of an available server: ");
-            CafeOrder newOrder = new CafeOrder { ServerID = serverID, OrderDate = DateTime.Now, PaymentTypeID = default, Server = activeServers.Single(s => s.ServerID == serverID)};
+            CafeOrder newOrder = new CafeOrder 
+            {   ServerID = serverID, 
+                OrderDate = DateTime.Now, 
+                PaymentTypeID = default, 
+                Server = activeServers.Single(s => s.ServerID == serverID),
+                OrderItems = new()
+            };
             var coResult = service.CreateOrder(newOrder);
             
             Console.WriteLine(coResult.Ok ? $"New order created with ID {coResult.Data}" : coResult.Message);
@@ -76,7 +82,8 @@ namespace CafePointOfSale.UI.Workflows
                         OrderID = orderID,
                         Quantity = quantity,
                         ExtendedPrice = itemToAdd.ItemPrice.Price * quantity,
-                        ItemPrice = itemToAdd.ItemPrice
+                        ItemPrice = itemToAdd.ItemPrice,
+                        CafeOrder = order
                     });
 
                     order = service.CalculateSubtotalAndTax(order);

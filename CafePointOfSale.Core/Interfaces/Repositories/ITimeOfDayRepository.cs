@@ -4,6 +4,6 @@
     {
         DateTime CurrentTime { get; }
 
-        int GetTimeOfDayID();
+        int? GetTimeOfDayID();
     }
 }
