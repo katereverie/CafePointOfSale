@@ -9,25 +9,21 @@ namespace CafePointOfSale.UI.Workflows
         {
             /* 
             * 1. (x) Get a Date from users via IO
-            * 2. Get all orders and their items on given Date
-            * 3. Display fetched orders and their itens via IO
+            * 2. (x) Get all orders and their items on given Date
+            * 3. (x) Display fetched orders and their itens via IO
             */
             Console.Clear();
             DateTime date = IO.GetDate("Enter a Date to view the sales report on the date: ");
 
-            // Each date may have several orders. 
-            // Each order may have several items
-            // Decide what to display and how to display them
+            var gsrbdResult = service.GetSalesReportByDate(date);
 
-            var gcobdResult = service.GetCafeOrdersByDate(date);
-
-            if (!gcobdResult.Ok || gcobdResult.Data == null || !gcobdResult.Data.Any()) 
+            if (!gsrbdResult.Ok || gsrbdResult.Data == null) 
             {
-                Console.WriteLine(gcobdResult.Ok ? $"No Sales Report available on {date}" : gcobdResult.Message);
+                Console.WriteLine(gsrbdResult.Ok ? $"No Sales Report available on {date}" : gsrbdResult.Message);
             }
             else 
             {
-                IO.PrintDailySalesReport(gcobdResult.Data);
+                IO.PrintDailySalesReport(gsrbdResult.Data);
             }
 
             IO.AnyKey();
