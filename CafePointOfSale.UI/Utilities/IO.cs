@@ -1,6 +1,5 @@
 ﻿using CafePointOfSale.Core.Entities.DTOs;
 using CafePointOfSale.Core.Entities.Tables;
-using Microsoft.Identity.Client;
 
 namespace CafePointOfSale.UI.Utilities
 {
@@ -40,7 +39,6 @@ namespace CafePointOfSale.UI.Utilities
             } while (true);
         }
 
-        // refactor this one, test it out
         public static DateTime GetDate(string prompt) 
         {
             DateTime date;
