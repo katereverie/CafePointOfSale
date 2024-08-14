@@ -100,7 +100,6 @@ namespace CafePointOfSale.UI.Workflows
 
         public static void ViewOpenOrders(IOrderService service)
         {
-
             Console.Clear();
 
             var gooResult = service.GetOpenOrders();
@@ -113,7 +112,6 @@ namespace CafePointOfSale.UI.Workflows
 
             var openOrders = gooResult.Data;
             IO.PrintOpenOrders(openOrders);
-
 
             do
             {
@@ -198,7 +196,7 @@ namespace CafePointOfSale.UI.Workflows
             var paymentOptions = gptResult.Data;
             IO.PrintPaymentOptions(paymentOptions);
             int paymentOption = IO.GetPaymentOption(paymentOptions, "Enter a Payment Option or 0 to return: ");
-            // the user can opt out by entering 0
+
             if (paymentOption == 0) 
             {
                 return;

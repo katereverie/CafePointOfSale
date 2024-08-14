@@ -3,7 +3,7 @@
     public interface ITimeOfDayRepository
     {
         DateTime CurrentTime { get; }
-
+        
         int? GetTimeOfDayID();
     }
 }

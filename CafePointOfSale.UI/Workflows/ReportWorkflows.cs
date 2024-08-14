@@ -13,6 +13,7 @@ namespace CafePointOfSale.UI.Workflows
             * 3. (x) Display fetched orders and their itens via IO
             */
             Console.Clear();
+            
             DateTime date = IO.GetDate("Enter a Date to view the sales report on the date: ");
 
             var gsrbdResult = service.GetSalesReportByDate(date);

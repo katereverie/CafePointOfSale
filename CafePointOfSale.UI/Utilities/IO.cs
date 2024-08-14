@@ -287,7 +287,6 @@ namespace CafePointOfSale.UI.Utilities
             Console.WriteLine();
         }
 
-        // probably wrong with the extended price and quantity because each item may have overlappings 
         public static void PrintDailySalesReport(DailySalesSummary summary)
         {
             PrintHeader($" Sales Summary of {summary.Date}", 80);
