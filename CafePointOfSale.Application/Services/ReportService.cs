@@ -1,3 +1,4 @@
+using System.Reflection.Metadata.Ecma335;
 using CafePointOfSale.Core.Entities.DTOs;
 using CafePointOfSale.Core.Entities.Tables;
 using CafePointOfSale.Core.Interfaces.Repositories;
@@ -19,24 +20,33 @@ namespace CafePointOfSale.Application.Services
             {
                 var orders = _orderRepo.GetOrdersByDate(date);
 
-                int totalOrderItems = 0;
-                decimal totalRevenue = 0m;
-                orders.ForEach(o => o.OrderItems.ForEach(oi => totalOrderItems += oi.Quantity));
-                orders.ForEach(o => totalRevenue += o.AmountDue ?? 0);
+                if (!orders.Any()) 
+                {
+                    return ResultFactory.Fail<DailySalesSummary>($"No sales made on {date:D}");
+                }
 
+                // Initialize summary object
                 var summary = new DailySalesSummary 
                 {
                     Date = date,
                     TotalOrders = orders.Count,
-                    TotalOrderItems = totalOrderItems,
-                    TotalRevenue = totalRevenue,
-                    OrderItems = new(),
-                    TopThreeItems = new()
+                    TotalOrderItems = orders.Sum(o => o.OrderItems.Sum(oi => oi.Quantity)), // Aggregate total items
+                    TotalRevenue = orders.Sum(o => o.AmountDue ?? 0m),                      // Aggregate total revenue
+                    AllOrderItems = orders.SelectMany(o => o.OrderItems).ToList(),          // Flatten all order items
+                    ItemSummaries = new()
                 };
 
-                orders.ForEach(o => o.OrderItems.ForEach(oi => summary.OrderItems.Add(oi)));
-                var sortedOrderItems = summary.OrderItems.OrderByDescending(oi => oi.ExtendedPrice).ToList();
-                summary.TopThreeItems.AddRange(sortedOrderItems);
+                // Generate ItemSummaries
+                summary.ItemSummaries = summary.AllOrderItems
+                    .GroupBy(oi => oi.ItemPrice.Item.ItemName) // Group by item name
+                    .Select(g => new ItemSummary
+                    {
+                        ItemName = g.Key,                      // Use item name as key
+                        SoldQuantity = g.Sum(oi => oi.Quantity),
+                        ItemRevenue = g.Sum(oi => oi.ExtendedPrice)
+                    })
+                    .OrderByDescending(g => g.ItemRevenue)
+                    .ToList();
 
                 return ResultFactory.Success(summary);
             }
