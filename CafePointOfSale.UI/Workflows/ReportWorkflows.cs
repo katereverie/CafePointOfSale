@@ -20,7 +20,7 @@ namespace CafePointOfSale.UI.Workflows
 
             if (!gsrbdResult.Ok || gsrbdResult.Data == null) 
             {
-                Console.WriteLine(gsrbdResult.Ok ? $"No Sales Report available on {date}" : gsrbdResult.Message);
+                Console.WriteLine(gsrbdResult.Message);
             }
             else 
             {
