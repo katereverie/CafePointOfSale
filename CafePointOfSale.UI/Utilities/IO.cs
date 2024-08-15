@@ -289,21 +289,21 @@ namespace CafePointOfSale.UI.Utilities
 
         public static void PrintDailySalesReport(DailySalesSummary summary)
         {
-            PrintHeader($" Sales Summary of {summary.Date}", 80);
+            PrintHeader($" Sales Summary on {summary.Date:D}", 80);
             Console.WriteLine($"{"Total Orders", -20} {"Total Order Items",-20} {"Total Revenue ($)", -20}");
             Console.WriteLine(new string('=', 80));
-            Console.WriteLine($"{summary.TotalOrders, -20}" +
+            Console.WriteLine($"{summary.TotalOrders, -20} " +
                               $"{summary.TotalOrderItems, -20} " +
                               $"{summary.TotalRevenue, -20} ");
             Console.WriteLine();
-            PrintHeader($" Top 3 Selling Items on {summary.Date}", 80);
-            Console.WriteLine($"{"Name", -20} {"Sold Quantity", -20} {"Revenue", -20}");
+            PrintHeader($" Sold Item Summary on {summary.Date:D}", 80);
+            Console.WriteLine($"{"Name", -30} {"Sold Quantity", -20} {"Revenue ($)", -20}");
             Console.WriteLine(new string('=', 80));
-            foreach(var item in summary.TopThreeItems) 
+            foreach(var itemSummary in summary.ItemSummaries) 
             {
-                Console.WriteLine($"{item.ItemPrice.Item.ItemName, -20} " +
-                                  $"{item.Quantity, -20} " +
-                                  $"{item.ExtendedPrice, -20}");
+                Console.WriteLine($"{itemSummary.ItemName, -30} " +
+                                  $"{itemSummary.SoldQuantity, -20} " +
+                                  $"{itemSummary.ItemRevenue, -20}");
             }
             Console.WriteLine();
         }
