@@ -58,12 +58,14 @@ namespace CafePointOfSale.UI.Workflows
                 if (!gaciResult.Ok || gaciResult.Data == null || !gaciResult.Data.Any())
                 {
                     Console.WriteLine(gaciResult.Ok ? "At current time, there is no available item." : gaciResult.Message);
-                    continue;
+                    IO.AnyKey();
+                    return;
                 }
 
+                // bug here
                 var allCurrentItems = gaciResult.Data;
-                var allCurrentCategories = allCurrentItems.Select(i => i.Category).ToList();
-
+                var allCurrentCategories = allCurrentItems.GroupBy(i => i.Category.CategoryID).Select(g => g.First().Category).ToList();
+                
                 IO.PrintAvailableCategories(allCurrentCategories);
                 int categoryID = IO.GetCategoryID(allCurrentCategories, "Enter the ID of an available category: ");
 
@@ -113,7 +115,7 @@ namespace CafePointOfSale.UI.Workflows
 
             do
             {
-                int choice = IO.GetInteger("Would you like to view details of a specific order?\n1. Yes\n2. No, I'd like to return");                
+                int choice = IO.GetInteger("Would you like to view details of a specific order?\n1. Yes\n0. No, I'd like to return\nEnter choice: ");                
                 switch (choice) 
                 {
                     case 0:
