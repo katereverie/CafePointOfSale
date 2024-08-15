@@ -14,7 +14,7 @@ namespace CafePointOfSale.Core.Entities.Tables
         public decimal? Tip { get; set; }
         public decimal? AmountDue { get; set; }
 
-        public required Server Server { get; set; }
-        public required List<OrderItem> OrderItems { get; set; }
+        public Server Server { get; set; }
+        public List<OrderItem> OrderItems { get; set; }
     }
 }

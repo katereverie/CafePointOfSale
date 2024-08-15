@@ -26,9 +26,7 @@ namespace CafePointOfSale.UI.Workflows
             CafeOrder newOrder = new CafeOrder 
             {   ServerID = serverID, 
                 OrderDate = DateTime.Now, 
-                PaymentTypeID = default, 
-                Server = activeServers.Single(s => s.ServerID == serverID),
-                OrderItems = new()
+                PaymentTypeID = default
             };
             var coResult = service.CreateOrder(newOrder);
             
