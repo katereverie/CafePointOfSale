@@ -1,5 +1,4 @@
 ﻿using CafePointOfSale.Core.Entities.DTOs;
-using CafePointOfSale.Core.Entities.Tables;
 using CafePointOfSale.Core.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
