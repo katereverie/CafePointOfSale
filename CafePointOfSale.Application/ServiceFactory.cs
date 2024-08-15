@@ -29,5 +29,17 @@ namespace CafePointOfSale.Application
                     throw new NotImplementedException();
             }
         }
+
+        public IReportService CreateReportService() 
+        {
+            switch (_config.GetDatabaseMode()) 
+            {
+                case DatabaseMode.ORM:
+                    return new ReportService(new OrderRepository(_config.GetConnectionString()));
+                case DatabaseMode.Mock:
+                default:
+                    throw new NotImplementedException();
+            }
+        }
     }
 }
