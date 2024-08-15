@@ -113,6 +113,7 @@ namespace CafePointOfSale.UI
                 switch (option)
                 {
                     case 1:
+                        ReportWorkflows.GetDailySalesReport(_serviceFactory.CreateReportService());
                         break;
                     case 0:
                         return;
