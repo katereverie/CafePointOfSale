@@ -1,4 +1,5 @@
-﻿using CafePointOfSale.Core.Entities.Tables;
+﻿using CafePointOfSale.Core.Entities.DTOs;
+using CafePointOfSale.Core.Entities.Tables;
 
 namespace CafePointOfSale.Core.Interfaces.Repositories
 {
@@ -10,7 +11,7 @@ namespace CafePointOfSale.Core.Interfaces.Repositories
         CafeOrder? GetByOrderID(int orderID);
         CafeOrder GetOrderDetails(int orderID); 
         List<CafeOrder> GetOpenOrders(); 
-        List<CafeOrder> GetOrdersByDate(DateTime date);
+        DailySalesSummary? GetDailySalesSummary(DateTime date);
         List<PaymentType> GetAllPaymentTypes();
         List<Server> GetActiveServers();
     }
