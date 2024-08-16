@@ -1,6 +1,4 @@
-using System.Reflection.Metadata.Ecma335;
 using CafePointOfSale.Core.Entities.DTOs;
-using CafePointOfSale.Core.Entities.Tables;
 using CafePointOfSale.Core.Interfaces.Repositories;
 using CafePointOfSale.Core.Interfaces.Services;
 
