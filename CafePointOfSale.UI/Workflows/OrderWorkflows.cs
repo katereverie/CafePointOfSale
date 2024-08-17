@@ -169,6 +169,7 @@ namespace CafePointOfSale.UI.Workflows
             // 5. (x) display payment types via IO
             // 6. Get payment type option from users via IO
             // 7. add chosen payment type ID to chosen order via service
+            // Consider if adding "add tip" feature is necessary
 
             Console.Clear();
 
