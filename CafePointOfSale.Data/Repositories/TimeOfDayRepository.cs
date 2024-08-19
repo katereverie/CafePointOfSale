@@ -4,13 +4,11 @@ namespace CafePointOfSale.Data.Repositories
 {
     public class TimeOfDayRepository : ITimeOfDayRepository
     {
-        private CafeContext _dbContext;
         public DateTime CurrentTime { get { return DateTime.Now; } }
         public List<(int, TimeSpan, TimeSpan)> TimeRanges { get; }
 
         public TimeOfDayRepository(string connectionString)
         {
-            _dbContext = new CafeContext(connectionString);
             TimeRanges = new List<(int TimeOfDayID, TimeSpan StartTime, TimeSpan EndTime)>
             {
                 (1, new TimeSpan(6, 30, 0), new TimeSpan(11, 30, 00)),  // Breakfast: 6:30 to 10:30 
