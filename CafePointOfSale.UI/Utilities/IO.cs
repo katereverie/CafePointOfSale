@@ -182,19 +182,19 @@ namespace CafePointOfSale.UI.Utilities
 
         public static void PrintOpenOrders(List<CafeOrder> orders)
         {
-            PrintHeader(" Open Orders ", 40);
-            Console.WriteLine($"{"Order ID", -10} {"Server ID", -10} {"Server Name", -20}");
-            Console.WriteLine(new string('=', 40));
+            PrintHeader(" Open Orders ", 60);
+            Console.WriteLine($"{"Order ID", -15} {"Server ID", -15} {"Server Name", -30}");
+            Console.WriteLine(new string('=', 60));
             foreach (var order in orders)
             {
-                Console.WriteLine($"{order.OrderID, -10} " +
-                                  $"{order.ServerID, -10} " + 
-                                  $"{order.Server.LastName + ", " + order.Server.LastName, -20} ");
+                Console.WriteLine($"{order.OrderID, -15} " +
+                                  $"{order.ServerID, -15} " + 
+                                  $"{order.Server.LastName + ", " + order.Server.FirstName, -30} ");
             }
             Console.WriteLine();
         }
 
-        public static void PrintAvailableCategories(List<Category> categories)
+        public static void PrintCurrentCategories(List<Category> categories)
         {
             PrintHeader(" Category List ", 30);
             Console.WriteLine($"{"ID", -10} {"Category", -20}");
@@ -216,8 +216,8 @@ namespace CafePointOfSale.UI.Utilities
             {
                 Console.WriteLine($"{i.ItemID,-10} " +
                                   $"{i.ItemName,-20} " +
-                                  $"{"$ " + i.ItemPrice.Price,-10}" +
-                                  $"{(i.ItemDescription.Length > 57 ? i.ItemDescription.Substring(0, 56) + "..." : i.ItemDescription),-60}");
+                                  $"{"$ " + i.ItemPrice.Price,-10} " +
+                                  $"{(i.ItemDescription.Length > 57 ? i.ItemDescription.Substring(0, 56) + "..." : i.ItemDescription),-60} ");
             }
             Console.WriteLine();
         }
@@ -236,9 +236,9 @@ namespace CafePointOfSale.UI.Utilities
             PrintOrderedItems(order.OrderItems);
         }
 
-        public static void PrintOrderedItems(List<OrderItem>? items) 
+        public static void PrintOrderedItems(List<OrderItem>? orderItems) 
         {
-            if (items == null || items.Count == 0)
+            if (orderItems == null || orderItems.Count == 0)
             {
                 Console.WriteLine("Ordered Items: none");
             }
@@ -247,13 +247,15 @@ namespace CafePointOfSale.UI.Utilities
                 PrintHeader(" Ordered Items ", 60);
                 Console.WriteLine($"{"Item Name",-25} {"Quantity",-10} {"Extended Price",-10}");
                 Console.WriteLine(new string('=', 60));
-                foreach (var oi in items)
+                foreach (var oi in orderItems)
                 {
                     Console.WriteLine($"{oi.ItemPrice.Item.ItemName,-25} " +
-                                      $"{oi.Quantity,-10} "  +
-                                      $"{oi.ExtendedPrice,-10} ");
+                                        $"{oi.Quantity,-10} " +
+                                        $"{oi.ExtendedPrice,-10} ");
                 }
             }
+
+            Console.WriteLine() ;
         }
 
         public static bool HasMoreItemsToAdd()
