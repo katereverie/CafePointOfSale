@@ -139,6 +139,7 @@ namespace CafePointOfSale.UI.Utilities
                 AnyKey();
             } while (true);
         }
+
         public static int GetPaymentOption(List<PaymentType> paymentOptions, string prompt)
         {
             do
@@ -224,10 +225,9 @@ namespace CafePointOfSale.UI.Utilities
         public static void PrintOrderSummary(CafeOrder order)
         {
             Console.Clear();
-            PrintHeader(" Order Summary ", 50);
-            Console.WriteLine(" General Summary ");
-            Console.WriteLine(new string('=', 50));
+            PrintHeader(" Order Summary ", 60);
             Console.WriteLine($"{"Server ID",-10} {"Status",-10} {"Subtotal",-15} {"Tax",-15}");
+            Console.WriteLine(new string('=', 60));
             Console.WriteLine($"{order.ServerID,-10} " +
                               $"{(order.PaymentTypeID == null ? "Pending" : "Closed"),-10} " +
                               $"{(order.SubTotal.HasValue ? order.SubTotal.Value.ToString("C2") : 0),-15} " +
@@ -235,6 +235,7 @@ namespace CafePointOfSale.UI.Utilities
             Console.WriteLine();
             PrintOrderedItems(order.OrderItems);
         }
+
         public static void PrintOrderedItems(List<OrderItem>? items) 
         {
             if (items == null || items.Count == 0)
@@ -243,9 +244,9 @@ namespace CafePointOfSale.UI.Utilities
             }
             else
             {
-                PrintHeader(" Ordered Items ", 55);
+                PrintHeader(" Ordered Items ", 60);
                 Console.WriteLine($"{"Item Name",-25} {"Quantity",-10} {"Extended Price",-10}");
-                Console.WriteLine(new string('=', 55));
+                Console.WriteLine(new string('=', 60));
                 foreach (var oi in items)
                 {
                     Console.WriteLine($"{oi.ItemPrice.Item.ItemName,-25} " +
@@ -289,14 +290,15 @@ namespace CafePointOfSale.UI.Utilities
 
         public static void PrintDailySalesReport(DailySalesSummary summary)
         {
-            PrintHeader($" Sales Summary on {summary.Date:D}", 80);
+            PrintHeader($"{summary.Date:D}", 80);
+            PrintHeader($" Daily Sales Summary", 80);
             Console.WriteLine($"{"Total Orders", -20} {"Total Order Items",-20} {"Total Revenue ($)", -20}");
             Console.WriteLine(new string('=', 80));
             Console.WriteLine($"{summary.TotalOrders, -20} " +
                               $"{summary.TotalOrderItems, -20} " +
                               $"{summary.TotalRevenue, -20} ");
             Console.WriteLine();
-            PrintHeader($" Sold Item Summary on {summary.Date:D}", 80);
+            PrintHeader($" Sold Items Summary ", 80);
             Console.WriteLine($"{"Name", -30} {"Sold Quantity", -20} {"Revenue ($)", -20}");
             Console.WriteLine(new string('=', 80));
             foreach(var itemSummary in summary.ItemSummaries) 
