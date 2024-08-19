@@ -3,9 +3,10 @@ using CafePointOfSale.Core.Entities.Tables;
 
 namespace CafePointOfSale.Core.Interfaces.Repositories
 {
-    public interface IOrderRepository
+    public interface ICafeRepository
     {
-        int Add(CafeOrder order); 
+        int Add(CafeOrder order);
+        void AddOrderItem(OrderItem orderItem);
         void Update(CafeOrder order); 
         void Delete(int orderID); 
         CafeOrder? GetByOrderID(int orderID);
@@ -14,5 +15,6 @@ namespace CafePointOfSale.Core.Interfaces.Repositories
         DailySalesSummary? GetDailySalesSummary(DateTime date);
         List<PaymentType> GetAllPaymentTypes();
         List<Server> GetActiveServers();
+        List<CurrentItem>? GetAllCurrentItems(int? timeOfDayID);
     }
 }
