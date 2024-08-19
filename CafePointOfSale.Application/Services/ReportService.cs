@@ -6,9 +6,9 @@ namespace CafePointOfSale.Application.Services
 {
     public class ReportService : IReportService
     {
-        private IOrderRepository _orderRepo;
+        private ICafeRepository _orderRepo;
 
-        public ReportService(IOrderRepository orderRepo) 
+        public ReportService(ICafeRepository orderRepo) 
         {
             _orderRepo = orderRepo;
         }

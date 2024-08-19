@@ -7,14 +7,12 @@ namespace CafePointOfSale.Application.Services
 {
     public class OrderService : IOrderService
     {
-        private IOrderRepository _orderRepo;
-        private IItemRepository _itemRepo;
+        private ICafeRepository _cafeRepo;
         private ITimeOfDayRepository _timeOfDayRepo;
 
-        public OrderService(IOrderRepository orderRepo, IItemRepository itemRepo, ITimeOfDayRepository timeOfDayRepo)
+        public OrderService(ICafeRepository orderRepo, ITimeOfDayRepository timeOfDayRepo)
         {
-            _orderRepo = orderRepo;
-            _itemRepo = itemRepo;
+            _cafeRepo = orderRepo;
             _timeOfDayRepo = timeOfDayRepo;
         }
 
@@ -23,7 +21,7 @@ namespace CafePointOfSale.Application.Services
             try
             {
                 order.PaymentTypeID = paymentOptionID;
-                _orderRepo.Update(order);
+                _cafeRepo.Update(order);
 
                 return ResultFactory.Success();
             }
@@ -54,7 +52,7 @@ namespace CafePointOfSale.Application.Services
 
                 order.AmountDue = order.SubTotal + order.Tax + order.Tip;
                 
-                _orderRepo.Update(order);
+                _cafeRepo.Update(order);
 
                 return ResultFactory.Success();
             }
@@ -68,7 +66,7 @@ namespace CafePointOfSale.Application.Services
         {
             try
             {
-                _orderRepo.Delete(orderID);
+                _cafeRepo.Delete(orderID);
 
                 return ResultFactory.Success();
             }
@@ -82,7 +80,7 @@ namespace CafePointOfSale.Application.Services
         {
             try
             {
-                int orderID = _orderRepo.Add(order);
+                int orderID = _cafeRepo.Add(order);
 
                 return ResultFactory.Success(orderID);
             }
@@ -96,7 +94,7 @@ namespace CafePointOfSale.Application.Services
         {
             try
             {
-                var serverList = _orderRepo.GetActiveServers();
+                var serverList = _cafeRepo.GetActiveServers();
 
                 return ResultFactory.Success(serverList);
             }
@@ -117,7 +115,7 @@ namespace CafePointOfSale.Application.Services
                     return ResultFactory.Fail<List<CurrentItem>>("Cafe is closed at current time.");
                 }
 
-                var itemList = _itemRepo.GetAllCurrentItems(timeOfDayID);
+                var itemList = _cafeRepo.GetAllCurrentItems(timeOfDayID);
                 return itemList == null
                     ? ResultFactory.Fail<List<CurrentItem>>("At current time, there is no available item.")
                     : ResultFactory.Success(itemList);
@@ -132,7 +130,7 @@ namespace CafePointOfSale.Application.Services
         {
             try
             {
-                var orderList = _orderRepo.GetOpenOrders();
+                var orderList = _cafeRepo.GetOpenOrders();
 
                 return ResultFactory.Success(orderList);
             }
@@ -146,7 +144,7 @@ namespace CafePointOfSale.Application.Services
         {
             try
             {
-                var paymentTypeList = _orderRepo.GetAllPaymentTypes();
+                var paymentTypeList = _cafeRepo.GetAllPaymentTypes();
 
                 return ResultFactory.Success(paymentTypeList);
             }
