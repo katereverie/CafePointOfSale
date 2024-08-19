@@ -4,9 +4,14 @@ using CafePointOfSale.Core.Interfaces.Repositories;
 
 namespace CafePointOfSale.UnitTests.MockRepos
 {
-    public class MockOrderRepo : IOrderRepository
+    public class MockOrderRepo : ICafeRepository
     {
         public int Add(CafeOrder order)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddOrderItem(OrderItem orderItem)
         {
             throw new NotImplementedException();
         }
@@ -17,6 +22,11 @@ namespace CafePointOfSale.UnitTests.MockRepos
         }
 
         public List<Server> GetActiveServers()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<CurrentItem>? GetAllCurrentItems(int? timeOfDayID)
         {
             throw new NotImplementedException();
         }
