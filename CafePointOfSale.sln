@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CafePointOfSale.UI", "CafePointOfSale.UI\CafePointOfSale.UI.csproj", "{004B9124-9CD1-4435-A184-C82977210FC1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CafePointOfSale.UI", "CafePointOfSale.UI\CafePointOfSale.UI.csproj", "{004B9124-9CD1-4435-A184-C82977210FC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CafePointOfSale.Application", "CafePointOfSale.Application\CafePointOfSale.Application.csproj", "{2E75929C-6FE2-49F9-BD5A-7923F91FEF12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CafePointOfSale.Application", "CafePointOfSale.Application\CafePointOfSale.Application.csproj", "{2E75929C-6FE2-49F9-BD5A-7923F91FEF12}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CafePointOfSale.Data", "CafePointOfSale.Data\CafePointOfSale.Data.csproj", "{15EE8B2C-B406-48F1-A33B-1D0EAAB18C3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CafePointOfSale.Data", "CafePointOfSale.Data\CafePointOfSale.Data.csproj", "{15EE8B2C-B406-48F1-A33B-1D0EAAB18C3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CafePointOfSale.Core", "CafePointOfSale.Core\CafePointOfSale.Core.csproj", "{DCA1DDBB-DA84-4D6E-8CB6-72912DE54CEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CafePointOfSale.Core", "CafePointOfSale.Core\CafePointOfSale.Core.csproj", "{DCA1DDBB-DA84-4D6E-8CB6-72912DE54CEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CafePointOfSale.UnitTests", "CafePointOfSale.UnitTests\CafePointOfSale.UnitTests.csproj", "{05F41685-5D78-494A-B5A4-6D5CC4FDD7C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{DCA1DDBB-DA84-4D6E-8CB6-72912DE54CEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCA1DDBB-DA84-4D6E-8CB6-72912DE54CEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCA1DDBB-DA84-4D6E-8CB6-72912DE54CEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05F41685-5D78-494A-B5A4-6D5CC4FDD7C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05F41685-5D78-494A-B5A4-6D5CC4FDD7C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05F41685-5D78-494A-B5A4-6D5CC4FDD7C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05F41685-5D78-494A-B5A4-6D5CC4FDD7C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
