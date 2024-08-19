@@ -30,9 +30,6 @@ namespace CafePointOfSale.UI
                         ManageOrders();
                         break;
                     case 2:
-                        ManagePayment();
-                        break;
-                    case 3:
                         ViewReports();
                         break;
                     case 0:
@@ -52,7 +49,7 @@ namespace CafePointOfSale.UI
                 Console.Clear();
                 MenuPrinter.DisplayOrderMenu();
 
-                int option = IO.GetInteger("Enter Management Option: ");
+                int option = IO.GetInteger("Enter Option: ");
                 switch (option)
                 {
                     case 1:
@@ -67,28 +64,7 @@ namespace CafePointOfSale.UI
                     case 4:
                         OrderWorkflows.CancelOrder(_serviceFactory.CreateOrderService());
                         break;
-                    case 0:
-                        return;
-                    default:
-                        Console.WriteLine("Invalid option");
-                        IO.AnyKey();
-                        continue;
-                }
-
-            } while (true);
-        }
-
-        private void ManagePayment()
-        {
-            do
-            {
-                Console.Clear();
-                MenuPrinter.DisplayPaymentMenu();
-
-                int option = IO.GetInteger("Enter Management Option: ");
-                switch (option)
-                {
-                    case 1:
+                    case 5:
                         OrderWorkflows.ProcessPayment(_serviceFactory.CreateOrderService());
                         break;
                     case 0:
@@ -97,8 +73,8 @@ namespace CafePointOfSale.UI
                         Console.WriteLine("Invalid option");
                         IO.AnyKey();
                         continue;
-
                 }
+
             } while (true);
         }
 
@@ -115,6 +91,8 @@ namespace CafePointOfSale.UI
                     case 1:
                         ReportWorkflows.GetDailySalesReport(_serviceFactory.CreateReportService());
                         break;
+                    case 2:
+                        throw new NotImplementedException();
                     case 0:
                         return;
                     default:
