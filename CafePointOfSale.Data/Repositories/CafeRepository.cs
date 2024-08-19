@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CafePointOfSale.Data.Repositories
 {
-    public class OrderRepository : IOrderRepository
+    public class CafeRepository : ICafeRepository
     {
         private CafeContext _dbContext;
 
-        public OrderRepository(string connectionString)
+        public CafeRepository(string connectionString)
         {
             _dbContext = new CafeContext(connectionString);
         }
@@ -115,6 +115,54 @@ namespace CafePointOfSale.Data.Repositories
                 .ToList();
             
             return summary;
+        }
+
+        public void AddOrderItem(OrderItem newOrderItem)
+        {
+            var trackedItemPrice = _dbContext.ItemPrice
+                .Local
+                .FirstOrDefault(ip => ip.ItemPriceID == newOrderItem.ItemPriceID);
+
+            if (trackedItemPrice == null)
+            {
+                _dbContext.Attach(newOrderItem.ItemPrice);
+            }
+
+            _dbContext.OrderItem.Add(newOrderItem);
+            _dbContext.SaveChanges();
+        }
+
+        public List<CurrentItem>? GetAllCurrentItems(int? timeOfDayID)
+        {
+            if (timeOfDayID == null)
+            {
+                return null;
+            }
+
+            var allItems = _dbContext.Item
+                .Include(i => i.Category)
+                .Include(i => i.ItemPrices)
+                .ToList();
+
+            var currentItems = new List<CurrentItem>();
+
+            foreach (var item in allItems)
+            {
+                var currentItemPrice = item.ItemPrices.FirstOrDefault(ip => ip.TimeOfDayID == timeOfDayID && (ip.EndDate == null || ip.EndDate > DateTime.Now));
+                if (currentItemPrice != null)
+                {
+                    currentItems.Add(new CurrentItem
+                    {
+                        ItemID = item.ItemID,
+                        ItemName = item.ItemName,
+                        ItemDescription = item.ItemDescription,
+                        Category = item.Category,
+                        ItemPrice = currentItemPrice
+                    });
+                }
+            }
+
+            return currentItems;
         }
     }
 }
