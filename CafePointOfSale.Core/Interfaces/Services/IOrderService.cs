@@ -6,7 +6,6 @@ namespace CafePointOfSale.Core.Interfaces.Services
     public interface IOrderService
     {
         Result<int> CreateOrder(CafeOrder order);
-        CafeOrder CalculateOrderTotals(CafeOrder order);
         Result SubmitOrder(CafeOrder order);
         Result AddPaymentMethod(CafeOrder order, int paymentOptionID);
         Result CancelOrder(int orderID);
@@ -14,5 +13,6 @@ namespace CafePointOfSale.Core.Interfaces.Services
         Result<List<PaymentType>> GetPaymentTypes();
         Result<List<CurrentItem>> GetAllCurrentItems();
         Result<List<CafeOrder>> GetOpenOrders();
+        CafeOrder CalculateOrderTotals(CafeOrder order);
     }
 }
