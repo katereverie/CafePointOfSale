@@ -15,14 +15,14 @@ namespace CafePointOfSale.UI.Workflows
             if (!gasResult.Ok || gasResult.Data == null || !gasResult.Data.Any())
             {
                 Console.WriteLine(gasResult.Ok ? "Currently, there is server available." : gasResult.Message);
-                IO.AnyKey();
+                InputHelper.AnyKey();
                 return;
             }
 
             var activeServers = gasResult.Data;
-            IO.PrintActiveServers(activeServers);
+            DisplayHelper.DisplayActiveServers(activeServers);
 
-            int serverID = IO.GetServerID(activeServers, "Enter the ID of an available server: ");
+            int serverID = InputHelper.GetServerID(activeServers, "Enter the ID of an available server: ");
             CafeOrder newOrder = new CafeOrder 
             {   ServerID = serverID, 
                 OrderDate = DateTime.Now, 
@@ -31,7 +31,7 @@ namespace CafePointOfSale.UI.Workflows
             var coResult = service.CreateOrder(newOrder);
             
             Console.WriteLine(coResult.Ok ? $"New order created with ID {coResult.Data}" : coResult.Message);
-            IO.AnyKey();
+            InputHelper.AnyKey();
         }
         public static void AddItemsToOrder(IOrderService service)
         {
@@ -41,19 +41,19 @@ namespace CafePointOfSale.UI.Workflows
             if (!gooResult.Ok || gooResult.Data == null || !gooResult.Data.Any())
             {
                 Console.WriteLine(gooResult.Ok ? "Currently, there is no open order." : gooResult.Message);
-                IO.AnyKey();
+                InputHelper.AnyKey();
                 return;
             }
 
             var openOrders = gooResult.Data;
-            IO.PrintOpenOrders(openOrders);
-            int orderID = IO.GetOrderID(openOrders, "Enter the ID of an open order: ");
+            DisplayHelper.DisplayOpenOrders(openOrders);
+            int orderID = InputHelper.GetOrderID(openOrders, "Enter the ID of an open order: ");
             CafeOrder order = openOrders.Single(op => op.OrderID == orderID);
             var gaciResult = service.GetAllCurrentItems();
             if (!gaciResult.Ok || gaciResult.Data == null || !gaciResult.Data.Any())
             {
                 Console.WriteLine(gaciResult.Ok ? "At current time, there is no available item." : gaciResult.Message);
-                IO.AnyKey();
+                InputHelper.AnyKey();
                 return;
             }
 
@@ -63,52 +63,52 @@ namespace CafePointOfSale.UI.Workflows
             bool continueAddingItems = true;
             while (continueAddingItems)
             {
-                IO.PrintCurrentCategories(allCurrentCategories);
-                int categoryID = IO.GetCategoryID(allCurrentCategories, "Enter the ID of an available category: ");
+                DisplayHelper.DisplayCurrentCategories(allCurrentCategories);
+                int categoryID = InputHelper.GetCategoryID(allCurrentCategories, "Enter the ID of an available category: ");
 
                 var currentItemsByCategory = allCurrentItems.Where(i => i.Category.CategoryID == categoryID).ToList();
-                IO.PrintCurrentItems(currentItemsByCategory);
-                int itemID = IO.GetItemID(currentItemsByCategory, "Enter the ID of an available item: ");
+                DisplayHelper.DisplayCurrentItems(currentItemsByCategory);
+                int itemID = InputHelper.GetItemID(currentItemsByCategory, "Enter the ID of an available item: ");
 
-                byte quantity = IO.GetQuantity("Enter Quantity: ");
-                if (quantity > 0)
+                byte quantity = InputHelper.GetQuantity("Enter Quantity: ");
+                if (quantity == 0)
                 {
-                    // 1. Add more of an existing item
-                    if (order.OrderItems.Any(oi => oi.ItemPrice.ItemID == itemID))
-                    {
-                        var existingItem = order.OrderItems.Single(oi => oi.ItemPrice.Item.ItemID == itemID);
-                        existingItem.Quantity += quantity;
-                        existingItem.ExtendedPrice = existingItem.ItemPrice.Price * existingItem.Quantity;
-                    }
-                    // 2. Add a new item
-                    else
-                    {
-                        var selectedCurrentItem = currentItemsByCategory.Single(i => i.ItemID == itemID);
-
-                        var newOrderItem = new OrderItem
-                        {
-                            OrderID = orderID,
-                            Quantity = quantity,
-                            ExtendedPrice = selectedCurrentItem.ItemPrice.Price * quantity,
-                            ItemPrice = selectedCurrentItem.ItemPrice
-                        };
-
-                        order.OrderItems.Add(newOrderItem);
-                    }
-
-                    order = service.CalculateSubtotalAndTax(order);
-                    IO.PrintOrderSummary(order);
+                    return;
                 }
 
-                continueAddingItems = IO.HasMoreItemsToAdd();
+                // 1. Add more of an existing item
+                if (order.OrderItems.Any(oi => oi.ItemPrice.ItemID == itemID))
+                {
+                    var existingItem = order.OrderItems.Single(oi => oi.ItemPrice.Item.ItemID == itemID);
+                    existingItem.Quantity += quantity;
+                    existingItem.ExtendedPrice = existingItem.ItemPrice.Price * existingItem.Quantity;
+                }
+                // 2. Add a new item
+                else
+                {
+                    var selectedCurrentItem = currentItemsByCategory.Single(i => i.ItemID == itemID);
+
+                    var newOrderItem = new OrderItem
+                    {
+                        OrderID = orderID,
+                        Quantity = quantity,
+                        ExtendedPrice = selectedCurrentItem.ItemPrice.Price * quantity,
+                        ItemPrice = selectedCurrentItem.ItemPrice
+                    };
+
+                    order.OrderItems.Add(newOrderItem);
+                }
+
+                order = service.CalculateOrderTotals(order);
+                DisplayHelper.DisplayOrderSummary(order);
+                
+                continueAddingItems = InputHelper.HasMoreItemsToAdd();
             }
 
-            var poResult = service.ProcessOrder(order);
-            Console.WriteLine(poResult.Ok ? "Order successfully processed." : poResult.Message);
-            IO.AnyKey();
+            var soResult = service.SubmitOrder(order);
+            Console.WriteLine(soResult.Ok ? "Order successfully submitted." : soResult.Message);
+            InputHelper.AnyKey();
         }
-
-
 
         public static void ViewOpenOrders(IOrderService service)
         {
@@ -118,36 +118,26 @@ namespace CafePointOfSale.UI.Workflows
             if (!gooResult.Ok || gooResult.Data == null || !gooResult.Data.Any())
             {
                 Console.WriteLine(gooResult.Ok ? "Currently, there is no open order." : gooResult.Message);
-                IO.AnyKey();
+                InputHelper.AnyKey();
                 return;
             }
 
             var openOrders = gooResult.Data;
-            IO.PrintOpenOrders(openOrders);
+            DisplayHelper.DisplayOpenOrders(openOrders);
 
-            do
+            int option = InputHelper.GetViewOpenOrderOption("Would you like to view details of a specific order?\n1. Yes\n0. No, I'd like to return\nEnter choice: ");                
+            switch (option) 
             {
-                int choice = IO.GetInteger("Would you like to view details of a specific order?\n1. Yes\n0. No, I'd like to return\nEnter choice: ");                
-                switch (choice) 
-                {
-                    case 0:
-                        IO.AnyKey();
-                        return;
-                    case 1:
-                        int orderID = IO.GetOrderID(openOrders, "Enter the ID of the order to view its details: ");
-                        var order = openOrders.Single(oo => oo.OrderID == orderID);
-                        IO.PrintOrderDetails(order);
-                        break;
-                    default:
-                        Console.WriteLine("Invalid choice.");
-                        continue;
-                }
+                case 0:
+                    break;
+                case 1:
+                    int orderID = InputHelper.GetOrderID(openOrders, "Enter the ID of the order to view its details: ");
+                    var order = openOrders.Single(oo => oo.OrderID == orderID);
+                    DisplayHelper.DisplayOrderDetails(order);
+                    break;
+            }
 
-                break;
-
-            } while (true);
-
-            IO.AnyKey();
+            InputHelper.AnyKey();
         }
         public static void CancelOrder(IOrderService service)
         {
@@ -158,18 +148,18 @@ namespace CafePointOfSale.UI.Workflows
             if (!gooResult.Ok || gooResult.Data == null || !gooResult.Data.Any()) 
             {
                 Console.WriteLine(gooResult.Ok ? "Currently, there is no open order to cancel." : gooResult.Message);
-                IO.AnyKey();
+                InputHelper.AnyKey();
                 return;
             }
 
             var openOrders = gooResult.Data;
-            IO.PrintOpenOrders(openOrders);
-            int orderID = IO.GetOrderID(openOrders, "Enter the ID of an open order: ");
+            DisplayHelper.DisplayOpenOrders(openOrders);
+            int orderID = InputHelper.GetOrderID(openOrders, "Enter the ID of an open order: ");
 
             var coResult = service.CancelOrder(orderID);
             Console.WriteLine(coResult.Ok ? "Order Successfully cancelled." : coResult.Message);
 
-            IO.AnyKey();
+            InputHelper.AnyKey();
         }
 
         public static void ProcessPayment(IOrderService service)
@@ -180,35 +170,32 @@ namespace CafePointOfSale.UI.Workflows
             if (!gooResult.Ok || gooResult.Data == null || !gooResult.Data.Any())
             {
                 Console.WriteLine(gooResult.Ok ? "Currently, there is no open order to process." : gooResult.Message);
-                IO.AnyKey();
+                InputHelper.AnyKey();
                 return;
             }
 
             var openOrders = gooResult.Data;
-            IO.PrintOpenOrders(openOrders);
-            int orderID = IO.GetOrderID(openOrders, "Enter the ID of an open order: ");
+            DisplayHelper.DisplayOpenOrders(openOrders);
+            int orderID = InputHelper.GetOrderID(openOrders, "Enter the ID of an open order: ");
             CafeOrder order = openOrders.Single(op => op.OrderID == orderID);
 
             var gptResult = service.GetPaymentTypes();
             if (!gptResult.Ok || gptResult.Data == null || !gptResult.Data.Any())
             {
                 Console.WriteLine(gptResult.Ok ? "Currently, there is no available payment option." : gooResult.Message);
-                IO.AnyKey();
+                InputHelper.AnyKey();
                 return;
             }
 
             var paymentOptions = gptResult.Data;
-            IO.PrintPaymentOptions(paymentOptions);
-            int paymentOption = IO.GetPaymentOption(paymentOptions, "Enter a Payment Option or 0 to return: ");
+            DisplayHelper.DisplayPaymentOptions(paymentOptions);
+            int paymentOption = InputHelper.GetPaymentOption(paymentOptions, "Enter a Payment Option or 0 to return: ");
 
-            if (paymentOption == 0) 
-            {
-                return;
-            }
+            if (paymentOption == 0) return;
 
             var apmResult = service.AddPaymentMethod(order, paymentOption);
             Console.WriteLine(apmResult.Ok ? $"Payment method added to order {order.OrderID}" : apmResult.Message);
-            IO.AnyKey();
+            InputHelper.AnyKey();
         }
     }
 }
