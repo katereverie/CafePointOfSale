@@ -9,7 +9,7 @@ namespace CafePointOfSale.UI.Workflows
         {
             Console.Clear();
             
-            DateTime date = IO.GetDate("Enter a Date to view the sales report on the date: ");
+            DateTime date = InputHelper.GetDate("Enter a Date to view the sales report on the date: ");
 
             var gsrbdResult = service.GetSalesReportByDate(date);
 
@@ -19,10 +19,10 @@ namespace CafePointOfSale.UI.Workflows
             }
             else 
             {
-                IO.PrintDailySalesReport(gsrbdResult.Data);
+                DisplayHelper.DisplayDailySalesReport(gsrbdResult.Data);
             }
 
-            IO.AnyKey();
+            InputHelper.AnyKey();
         }
     }
 }
