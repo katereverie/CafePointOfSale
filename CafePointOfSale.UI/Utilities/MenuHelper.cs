@@ -1,6 +1,6 @@
 ﻿namespace CafePointOfSale.UI.Utilities
 {
-    public static class MenuPrinter
+    public static class MenuHelper
     {
         public static void DisplayMainMenu()
         {
