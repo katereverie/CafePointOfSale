@@ -30,36 +30,16 @@ namespace CafePointOfSale.Application.Services
                 return ResultFactory.Fail(ex.Message);
             }
         }
-
-        public Result ProcessOrder(CafeOrder order)
+        public CafeOrder CalculateOrderTotals(CafeOrder order)
         {
-            try
-            {
-                int itemCount = 0;
+            order.SubTotal = order.OrderItems.Sum(oi => oi.ExtendedPrice);
+            order.Tax = order.SubTotal * 0.08m;
+            order.Tip = order.OrderItems.Sum(oi => oi.Quantity) > 15
+                ? order.SubTotal * 0.15m
+                : 0;
+            order.AmountDue = order.SubTotal + order.Tax + order.Tip;
 
-                foreach (var item in order.OrderItems)
-                {
-                    itemCount += item.Quantity;
-                }
-
-                order.Tip = order.Tip ?? 0;
-                order.AmountDue = order.AmountDue ?? 0;
-
-                if (itemCount > 15)
-                {
-                    order.Tip = order.SubTotal * 0.15m;
-                }
-
-                order.AmountDue = order.SubTotal + order.Tax + order.Tip;
-                
-                _cafeRepo.Update(order);
-
-                return ResultFactory.Success();
-            }
-            catch (Exception ex)
-            {
-                return ResultFactory.Fail(ex.Message);
-            }
+            return order;
         }
 
         public Result CancelOrder(int orderID)
@@ -154,19 +134,18 @@ namespace CafePointOfSale.Application.Services
             }
         }
 
-        public CafeOrder CalculateSubtotalAndTax(CafeOrder order)
+        public Result SubmitOrder(CafeOrder order)
         {
-            order.SubTotal = order.SubTotal ?? 0;
-            order.Tax = order.Tax ?? 0;
-
-            foreach (var item in order.OrderItems)
+            try
             {
-                order.SubTotal += item.ExtendedPrice;
+                _cafeRepo.Update(order);
+
+                return ResultFactory.Success();
             }
-
-            order.Tax = order.SubTotal * 0.08m;
-
-            return order;
+            catch (Exception ex)
+            {
+                return ResultFactory.Fail(ex.Message);
+            }
         }
     }
 }
