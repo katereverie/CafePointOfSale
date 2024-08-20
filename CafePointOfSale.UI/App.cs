@@ -21,9 +21,9 @@ namespace CafePointOfSale.UI
             do
             {
                 Console.Clear();
-                MenuPrinter.DisplayMainMenu();
+                MenuHelper.DisplayMainMenu();
 
-                int option = IO.GetInteger("Enter Menu Option: ");
+                int option = InputHelper.GetInteger("Enter Menu Option: ");
                 switch (option)
                 {
                     case 1:
@@ -36,7 +36,7 @@ namespace CafePointOfSale.UI
                         return;
                     default:
                         Console.WriteLine("Invalid option.");
-                        IO.AnyKey();
+                        InputHelper.AnyKey();
                         continue;
                 }
             } while (true);
@@ -47,9 +47,9 @@ namespace CafePointOfSale.UI
             do
             {
                 Console.Clear();
-                MenuPrinter.DisplayOrderMenu();
+                MenuHelper.DisplayOrderMenu();
 
-                int option = IO.GetInteger("Enter Option: ");
+                int option = InputHelper.GetInteger("Enter Option: ");
                 switch (option)
                 {
                     case 1:
@@ -71,7 +71,7 @@ namespace CafePointOfSale.UI
                         return;
                     default:
                         Console.WriteLine("Invalid option");
-                        IO.AnyKey();
+                        InputHelper.AnyKey();
                         continue;
                 }
 
@@ -83,9 +83,9 @@ namespace CafePointOfSale.UI
             do
             {
                 Console.Clear();
-                MenuPrinter.DisplayReportMenu();
+                MenuHelper.DisplayReportMenu();
 
-                int option = IO.GetInteger("Enter Option: ");
+                int option = InputHelper.GetInteger("Enter Option: ");
                 switch (option)
                 {
                     case 1:
@@ -97,7 +97,7 @@ namespace CafePointOfSale.UI
                         return;
                     default:
                         Console.WriteLine("Invalid option");
-                        IO.AnyKey();
+                        InputHelper.AnyKey();
                         continue;
                 }
             } while (true);
