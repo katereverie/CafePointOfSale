@@ -47,11 +47,5 @@ namespace CafePointOfSale.UnitTests
 
             Assert.That(order2, Is.Null);
         }
-
-        [Test]
-        public void Test_CancelOrderSuccess()
-        {
-            var service = new OrderService(new MockCafeRepo(), new MockTimeOfDayRepo());
-        }
     }
 }
