@@ -1,14 +1,10 @@
 # Cafe Point of Sale
 
-## Project Overview
+## Overview
 
 The **Cafe Point of Sale** (POS) system is designed to manage orders, track sales, and facilitate payment processing for a cafe. This application is built with scalability in mind, allowing for future expansion into tablet and web applications by reusing the core application and data layers. The system is intended for use in terminal view by cafe staff, with plans for future UI development.
 
-### Project Type
-
-This is a terminal-based point-of-sale application with a layered architecture that separates the presentation, business logic, and data access. The focus is on building a robust and extendable foundation that can evolve to meet the needs of various user interfaces.
-
-### Product Use Cases
+### Use Cases
 
 The POS system can be used by cafe staff to:
 - Create and manage customer orders
