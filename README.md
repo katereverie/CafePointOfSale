@@ -52,7 +52,6 @@ This system streamlines cafe operations by automating order processing, ensuring
 - **UI Expansion**: Develop tablet and web interfaces that reuse the existing application and data layers.
 - **Advanced Reporting**: Add more detailed reporting features, such as filtering by server or item.
 - **Integration with Payment Systems**: Implement integration with real payment processing systems.
-- **Loyalty Program**: Add functionality for managing customer loyalty programs.
 
 ## Learning Outcomes
 
