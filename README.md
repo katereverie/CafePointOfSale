@@ -56,11 +56,9 @@ This system streamlines cafe operations by automating order processing, ensuring
 
 ## Learning Outcomes
 
-Working on this project has been a significant learning journey for me. Here are some of the key takeaways:
+- **N-Tier Architecture**: Separating concerns goes a long way. Planning is worth the time it takes to do because lack of planning leads to technical debt, which then makes refractoring a hell. The trade-off is more time efforts now, and less headaches later. 
 
-- **N-Tier Architecture**: This project deepened my understanding of the importance of separating concerns in software design. By organizing the code into distinct layers, I was able to see firsthand how this approach makes the application more maintainable and scalable. It also helped me appreciate the power of building software that can easily adapt to future needs.
-
-- **Interface Implementation**: Implementing interfaces between the layers was a challenging yet rewarding experience. It taught me the value of loose coupling in software design, making the application not only easier to test but also more resilient to changes. This was my first time rigorously applying this principle, and I now feel much more confident in designing flexible, testable systems.
+- **Interface Implementation**: Implementing interfaces between the layers made testing and refactoring easier for me. I understand now the value of loose coupling in software design. 
 
 - **Mocking and Testing**: Creating a training mode using mock data was both challenging and educational. It pushed me to think critically about how to simulate different environments and how crucial testing is in catching potential issues early. This experience has made me more aware of the importance of testing in the development cycle and how it contributes to building reliable software.
 
