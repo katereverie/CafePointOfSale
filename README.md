@@ -12,7 +12,7 @@ The POS system can be used by cafe staff to:
 - View and cancel open orders
 - Generate sales reports by category and date
 
-### Problem Solved
+### Problems Solved
 
 This system streamlines cafe operations by automating order processing, ensuring accurate billing, and providing detailed sales insights. It also lays the groundwork for a more comprehensive POS system that can integrate with various front-end interfaces in the future.
 
@@ -43,13 +43,13 @@ This system streamlines cafe operations by automating order processing, ensuring
 - **Sales Reporting**: Generate and view sales reports by category for a specific date.
 - **Order Cancellation**: Cancel open orders that have not been paid.
 
-### Future Enhancements
+### Future Features to Add
 
 - **UI Expansion**: Develop tablet and web interfaces that reuse the existing application and data layers.
 - **Advanced Reporting**: Add more detailed reporting features, such as filtering by server or item.
 - **Integration with Payment Systems**: Implement integration with real payment processing systems.
 
-## Learning Outcomes
+## What I learned
 
 - **N-Tier Architecture**: Separating concerns goes a long way. Planning is worth the time it takes to do because lack of planning leads to technical debt, which then makes refractoring a hell. The trade-off is more time efforts now, and less headaches later. 
 
