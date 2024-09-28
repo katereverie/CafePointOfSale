@@ -92,7 +92,9 @@ namespace CafePointOfSale.UI
                         ReportWorkflows.GetDailySalesReport(_serviceFactory.CreateReportService());
                         break;
                     case 2:
-                        throw new NotImplementedException();
+                        Console.WriteLine("Yet to be implemented");
+                        InputHelper.AnyKey();
+                        break;
                     case 0:
                         return;
                     default:
