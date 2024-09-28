@@ -20,18 +20,11 @@ The **Cafe Point of Sale** (POS) system is designed to manage orders, track sale
 
 ## Technology Stack
 
-### Programming Languages
-- C#
-
-### Frameworks & Libraries
-- ASP.NET Core
-- Entity Framework (or any data access framework of choice)
-- LINQ (for data querying)
-
-### Tools
-- Visual Studio
-- Docker (for containerization)
-- Azure Data Studio (for database management)
+- Language: C#
+- Frameworks: .NET Core, Entity Framework Core (ORM), Dapper (light ORM)
+- Database-related Operations: Microsoft SQL Server (Database Management), Docker (Containerization), Dapper and Entity Framework Core (Data Access)
+- Tests: NUnit
+- Other tools: Azure Data Studio (Database management), Visual Studio (IDE)
 
 ## Features
 
