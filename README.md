@@ -1,4 +1,4 @@
-# Cafe Point of Sale
+# Cafe Point of Sale (to be expanded)
 
 ## Overview
 
